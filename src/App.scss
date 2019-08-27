@@ -1,0 +1,18 @@
+
+
+.App {
+    display: flex;
+
+    #map, .restaurants {
+        height: 100vh;
+    }
+
+    #map {
+        width: 75%;
+    }
+
+    .restaurants {
+        width: 25%;
+        background: #e9e9e9;
+    }
+}
