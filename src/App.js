@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
 import './App.scss';
 
+var map = '';
+
 class App extends Component {
+
+  state = {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 8
+  }
 
   componentDidMount() {
     this.renderMap();
+    this.getUserLocation();
   }
 
   renderMap = () => {
@@ -13,9 +21,25 @@ class App extends Component {
   }
 
   initMap = () => {
-    var map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644},
-      zoom: 8
+    map = new window.google.maps.Map(document.getElementById('map'), {
+      center: this.state.center,
+      zoom: this.state.zoom
+    })
+  }
+
+  getUserLocation = () => {
+    let x = document.querySelector('#location');
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.showPosition);
+    } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+
+  showPosition = (position) => {
+    this.setState({
+      center: {lat: position.coords.latitude, lng: position.coords.longitude},
+      zoom: 15
     })
   }
   
@@ -23,7 +47,9 @@ class App extends Component {
     return (
       <div className="App">
         <div id="map"></div>
-        <div className="restaurants"></div>
+        <div className="restaurants">
+          <div id="location">Lat: {this.state.center.lat}, Lng: {this.state.center.lng}</div>
+        </div>
       </div>
     );
   }
