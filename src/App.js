@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import './App.scss';
+import { thisExpression } from '@babel/types';
+import { stringify } from 'querystring';
 
-var map = '';
+var map;
 
 class App extends Component {
 
   state = {
-    center: {lat: -34.397, lng: 150.644},
+    lat: -34.397,
+    lng: 150.644,
     zoom: 8
   }
 
@@ -16,15 +19,24 @@ class App extends Component {
   }
 
   renderMap = () => {
-    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyD1DrDBUd6GNL2EIBCxK-K0OjkTny8kbuA&callback=initMap")
-    window.initMap = this.initMap
+    loadStyle("https://api.mapbox.com/mapbox-gl-js/v1.3.0/mapbox-gl.css");
+    loadScript("https://api.mapbox.com/mapbox-gl-js/v1.3.0/mapbox-gl.js");
+    setTimeout(() => {
+      this.initMap();
+    }, 2000)
   }
 
   initMap = () => {
-    map = new window.google.maps.Map(document.getElementById('map'), {
-      center: this.state.center,
-      zoom: this.state.zoom
-    })
+    let {lat, lng} = this.state;
+
+    window.mapboxgl.accessToken = 'pk.eyJ1IjoieWFoeWFlbGhhcm9ueSIsImEiOiJjazA5aGJoYXIwODhkM25udnJtMWZ5cGtmIn0.jUekTZ-uMWs1sAcA7AQNrQ';
+
+    map = new window.mapboxgl.Map({
+      container: 'map', // HTML container id
+      style: 'mapbox://styles/mapbox/streets-v11', // style URL
+      center: [lng, lat], // starting position as [lng, lat]
+      zoom: 8
+    });
   }
 
   getUserLocation = () => {
@@ -38,8 +50,9 @@ class App extends Component {
 
   showPosition = (position) => {
     this.setState({
-      center: {lat: position.coords.latitude, lng: position.coords.longitude},
-      zoom: 15
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+      zoom: 25
     })
   }
   
@@ -48,13 +61,20 @@ class App extends Component {
       <div className="App">
         <div id="map"></div>
         <div className="restaurants">
-          <div id="location">Lat: {this.state.center.lat}, Lng: {this.state.center.lng}</div>
+          <div id="location">Lat: {this.state.lat}, <br/>Lng: {this.state.lng}</div>
         </div>
       </div>
     );
   }
 }
 
+function loadStyle(url) {
+  let index  = window.document.getElementsByTagName("link")[0];
+  let link = window.document.createElement("link");
+  link.href = url;
+  link.rel = 'stylesheet';
+  index.parentNode.insertBefore(link, index);
+}
 
 function loadScript(url) {
   let index  = window.document.getElementsByTagName("script")[0];
