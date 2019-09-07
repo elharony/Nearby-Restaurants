@@ -8,6 +8,7 @@ var map;
 class App extends Component {
 
   state = {
+    places: [],
     lat: -34.397,
     lng: 150.644,
     zoom: 8
@@ -35,8 +36,35 @@ class App extends Component {
       container: 'map', // HTML container id
       style: 'mapbox://styles/mapbox/streets-v11', // style URL
       center: [lng, lat], // starting position as [lng, lat]
-      zoom: 8
+      zoom: 12
     });
+    
+    const that = this;
+    fetch(`https://api.foursquare.com/v2/venues/explore?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323&limit=100&ll=${lat},${lng}&query=coffee`)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(myJson) {
+        console.log(myJson.response.groups[0].items);
+        that.setState({
+          places: myJson.response.groups[0].items
+        }, that.placeMarkers);
+      })
+      .catch(function(err) {
+          console.log(err)
+      });
+  }
+
+  placeMarkers = () => {    
+    this.state.places.map(place => {
+      var popup = new window.mapboxgl.Popup()
+      .setHTML(`<h1>${place.venue.name}</h1><p>Location: ${place.venue.location.address}</p>`);
+
+      var marker = new window.mapboxgl.Marker()
+      .setLngLat([place.venue.location.lng, place.venue.location.lat])
+      .setPopup(popup)
+      .addTo(map);
+    })
   }
 
   getUserLocation = () => {
