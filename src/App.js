@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import './App.scss';
-import { thisExpression } from '@babel/types';
-import { stringify } from 'querystring';
 
+var request = require('request');
 var map;
 
 class App extends Component {
 
   state = {
     places: [],
-    lat: -34.397,
-    lng: 150.644,
-    zoom: 8
+    lat: 37.779635,
+    lng: -122.418856,
+    zoom: 14
   }
 
   componentDidMount() {
     this.renderMap();
-    this.getUserLocation();
+    // this.getUserLocation();
   }
 
   renderMap = () => {
@@ -36,23 +35,26 @@ class App extends Component {
       container: 'map', // HTML container id
       style: 'mapbox://styles/mapbox/streets-v11', // style URL
       center: [lng, lat], // starting position as [lng, lat]
-      zoom: 12
+      zoom: 14
     });
     
     const that = this;
-    fetch(`https://api.foursquare.com/v2/venues/explore?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323&limit=100&ll=${lat},${lng}&query=coffee`)
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(myJson) {
-        console.log(myJson.response.groups[0].items);
-        that.setState({
-          places: myJson.response.groups[0].items
-        }, that.placeMarkers);
-      })
-      .catch(function(err) {
-          console.log(err)
-      });
+
+    // request('https://api.foursquare.com/v2/venues/5bbcefe5a6031c002c147a3a/photos?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323', function (error, response, body) {
+    //   console.log('error:', error); // Print the error if one occurred
+    //   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    //   console.log('body:', JSON.parse(body)); // Print the HTML for the Google homepage.
+    // })
+
+    request(`https://api.foursquare.com/v2/venues/explore?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323&limit=100&ll=${lat},${lng}&query=restaurant`, function (error, response, body) {
+      console.log('error:', error); // Print the error if one occurred
+      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+      console.log('body:', JSON.parse(body)); // Print the HTML for the Google homepage.
+
+      that.setState({
+        places: JSON.parse(body).response.groups[0].items
+      }, that.placeMarkers);
+    });
   }
 
   placeMarkers = () => {    
@@ -88,8 +90,19 @@ class App extends Component {
     return (
       <div className="App">
         <div id="map"></div>
+        {/* <div id="location">Lat: {this.state.lat}, <br/>Lng: {this.state.lng}</div> */}
         <div className="restaurants">
-          <div id="location">Lat: {this.state.lat}, <br/>Lng: {this.state.lng}</div>
+
+          {this.state.places.map(place => (
+            <div className="restaurant">
+              <h2 className="name">{place.venue.name}</h2>
+              <ul className="info">
+                <li><i className="fas fa-map-marker-alt"></i> {place.venue.location.formattedAddress[0]}, {place.venue.location.formattedAddress[1]}, {place.venue.location.formattedAddress[2]}</li>
+                <li></li>
+              </ul>
+            </div>
+          ))}
+
         </div>
       </div>
     );
