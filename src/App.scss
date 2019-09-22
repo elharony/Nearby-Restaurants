@@ -1,4 +1,13 @@
 
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+h1, h2, h3, h4, h5, h6, div, p, span, li {
+    font-family: 'Lato', sans-serif;
+}
 
 .App {
     display: flex;
@@ -13,6 +22,38 @@
 
     .restaurants {
         width: 25%;
-        background: #e9e9e9;
+        max-height: 100vh;
+        overflow-y: scroll;
+        padding: 1em 1em 1em 0;
+        background: #fff;
+
+        .restaurant {
+            margin-bottom: 1em;
+            padding-left: 0.75em;
+            border-left: 3px solid transparent;
+            transition: all 150ms ease;
+
+            .name {
+                margin-bottom: 0.25em;
+                font-size: 1.4em;
+                color: #4611a7;
+            }
+
+            .info {
+                list-style: none;
+
+                li {
+                    font-size: 0.9em;
+
+                    i {
+                        opacity: 0.3;
+                    }
+                }
+            }
+
+            &:hover {
+                border-color:#4611a7;
+            }
+        }
     }
 }
