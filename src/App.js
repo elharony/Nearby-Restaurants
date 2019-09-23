@@ -40,13 +40,20 @@ class App extends Component {
     
     const that = this;
 
+    /**
+     * PROBLEM
+     * -------
+     * I need to do multiple requests... 
+     * How can I get all places, then get each place data, and then get each place's associated image for Popup Window!
+     */
+
     // request('https://api.foursquare.com/v2/venues/5bbcefe5a6031c002c147a3a/photos?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323', function (error, response, body) {
     //   console.log('error:', error); // Print the error if one occurred
     //   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
     //   console.log('body:', JSON.parse(body)); // Print the HTML for the Google homepage.
     // })
 
-    request(`https://api.foursquare.com/v2/venues/explore?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323&limit=100&ll=${lat},${lng}&query=restaurant`, function (error, response, body) {
+    request(`https://api.foursquare.com/v2/venues/explore?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323&limit=1&ll=${lat},${lng}&query=restaurant`, function (error, response, body) {
       console.log('error:', error); // Print the error if one occurred
       console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
       console.log('body:', JSON.parse(body)); // Print the HTML for the Google homepage.
@@ -57,15 +64,49 @@ class App extends Component {
     });
   }
 
-  placeMarkers = () => {    
+  placeMarkers = () => {
     this.state.places.map(place => {
-      var popup = new window.mapboxgl.Popup()
-      .setHTML(`<h1>${place.venue.name}</h1><p>Location: ${place.venue.location.address}</p>`);
 
-      var marker = new window.mapboxgl.Marker()
-      .setLngLat([place.venue.location.lng, place.venue.location.lat])
-      .setPopup(popup)
-      .addTo(map);
+      // Get 
+      request(`https://api.foursquare.com/v2/venues/${place.venue.id}/photos?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323`, function (error, response, body) {
+
+        let photo = JSON.parse(body).response.photos.items[0];
+        let imgUrl = photo.prefix + photo.width + 'x' + photo.height + photo.suffix;
+
+        request(`https://api.foursquare.com/v2/venues/${place.venue.id}/tips?client_id=PMHC2WA1VCBHVYOPPSJ0QSBYTLRF4PNJ04OWVWV0PZJ0QFIR&client_secret=CULSZZ44YAEBOWBFGPB4BF5ISRXXSNYR0EE3JV3CNE2ZWHV0&v=20180323`, function (error, response, body) {
+
+          console.log('Tips', JSON.parse(body));
+          let tips = JSON.parse(body).response.tips.items[0];
+          let userFirstName = tips.user.firstName;
+          let userLastName = tips.user.lastName;
+          let userInteractionType = tips.authorInteractionType;
+
+          // Popup Window
+          var popup = new window.mapboxgl.Popup()
+          .setHTML(`
+            <img src=${imgUrl} alt=${place.venue.name}/>
+
+            <div class='details'>
+              <h2>${place.venue.name}</h2>
+              <p class='location'><i class='fas fa-map-marker-alt'></i> ${place.venue.location.address}</p>
+              <div class='rate'>
+                <div class='rate-info'>
+                  <span class='user'>${userFirstName} ${userLastName}</span> 
+                  interacted as: <span class='interaction'>${userInteractionType}</span>
+                </div>
+                <p>${tips.text}</p>
+              </div>
+            </div>
+          `);
+
+          // Marker, Connected with its associated Popup Window
+          var marker = new window.mapboxgl.Marker()
+          .setLngLat([place.venue.location.lng, place.venue.location.lat])
+          .setPopup(popup)
+          .addTo(map);
+
+        })   
+      })
     })
   }
 
@@ -93,8 +134,8 @@ class App extends Component {
         {/* <div id="location">Lat: {this.state.lat}, <br/>Lng: {this.state.lng}</div> */}
         <div className="restaurants">
 
-          {this.state.places.map(place => (
-            <div className="restaurant">
+          {this.state.places.map( (place, index) => (
+            <div className="restaurant" key={index}>
               <h2 className="name">{place.venue.name}</h2>
               <ul className="info">
                 <li><i className="fas fa-map-marker-alt"></i> {place.venue.location.formattedAddress[0]}, {place.venue.location.formattedAddress[1]}, {place.venue.location.formattedAddress[2]}</li>
