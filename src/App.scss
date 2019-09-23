@@ -57,3 +57,48 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
         }
     }
 }
+
+/** Popup Window **/
+.mapboxgl-popup-content {
+    padding: 0;
+
+    img {
+        width: 100%;
+        max-height: 225px;
+    }
+
+    .details {
+        padding: 10px;
+
+        h2 {
+            margin-bottom: 0.25em;
+            font-size: 2em;
+            color: #4611a7;
+        }
+    
+        .location {
+            font-size: 1.2em;
+            margin-bottom: 1em;
+    
+            i {
+                opacity: 0.3;
+            }
+        }
+    
+        .rate {
+
+            .rate-info {
+                margin-bottom: 0.25em;
+                
+                .user, .interaction {
+                    font-weight: bold;
+                }
+            }
+
+            p {
+                font-size: 1.1em;
+                line-height: 1.3em;
+            }
+        }
+    }
+}
