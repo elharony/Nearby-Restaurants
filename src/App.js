@@ -3,100 +3,64 @@ import './App.scss';
 
 const places = [
   {
-     "name":"Bronco",
-     "address":"39 Rue des Petites Écuries, 75010 Paris",
-     "lat":48.8737815,
-     "lng":2.3501649,
-     "ratings":[
-        {
-           "stars":4,
-           "comment":"Great! But not many veggie options."
-        },
-        {
-           "stars":5,
-           "comment":"My favorite restaurant!"
-        }
-     ]
+    "name": "Vevo Co-working Space",
+    "image": "vevo-co-working-space.jpg",
+    "address": "El-Mohandes El-Kordy, Maadi Al Khabiri Al Wasti, Al Maadi, Cairo, Egypt",
+    "phone": "0101 273 2732",
+    "lat": 29.9612892,
+    "lng": 31.2483158,
+    "facebook": "https://www.facebook.com/vevospace/",
+    "rating": 3
   },
   {
-     "name":"Babalou",
-     "address":"4 Rue Lamarck, 75018 Paris",
-     "lat":48.8865035,
-     "lng":2.3442197,
-     "ratings":[
-        {
-           "stars":5,
-           "comment":"Tiny pizzeria next to Sacre Coeur!"
-        },
-        {
-           "stars":3,
-           "comment":"Meh, it was fine."
-        }
-     ]
+    "name": "Fab Lab Egypt",
+    "image": "fab-lab-egypt.jpg",
+    "address": "Villa 35 - 100 st. - Near Al Horia Square, Maadi, Maadi Al Khabiri Ash Sharqeyah, Cairo, Cairo Governorate",
+    "phone": "0101 746 5650",
+    "lat": 29.96175,
+    "lng": 31.2492591,
+    "facebook": "https://www.facebook.com/fablab.egypt/",
+    "rating": 4
   },
   {
-    "name":"Bronco",
-    "address":"39 Rue des Petites Écuries, 75010 Paris",
-    "lat":48.8737815,
-    "lng":2.3501649,
-    "ratings":[
-       {
-          "stars":4,
-          "comment":"Great! But not many veggie options."
-       },
-       {
-          "stars":5,
-          "comment":"My favorite restaurant!"
-       }
-    ]
+    "name": "Makanak Office Space",
+    "image": "makanak-office-space.jpg",
+    "address": "23 El-Nahda Street, 7 St, Maadi Sarayat, El Maleka Tower, Second Floor. Maadi, Maadi Al Khabiri Ash Sharqeyah, Cairo, Cairo Governorate 11431",
+    "phone": "0120 000 2092",
+    "lat": 29.9601,
+    "lng": 31.2532501,
+    "facebook": "https://www.facebook.com/makanakoffice/",
+    "rating": 5
   },
   {
-    "name":"Babalou",
-    "address":"4 Rue Lamarck, 75018 Paris",
-    "lat":48.8865035,
-    "lng":2.3442197,
-    "ratings":[
-       {
-          "stars":5,
-          "comment":"Tiny pizzeria next to Sacre Coeur!"
-       },
-       {
-          "stars":3,
-          "comment":"Meh, it was fine."
-       }
-    ]
+    "name": "Vevo Co-working Space",
+    "image": "vevo-co-working-space.jpg",
+    "address": "El-Mohandes El-Kordy, Maadi Al Khabiri Al Wasti, Al Maadi, Cairo, Egypt",
+    "phone": "0101 273 2732",
+    "lat": 29.9612892,
+    "lng": 31.2483158,
+    "facebook": "https://www.facebook.com/vevospace/",
+    "rating": 2
   },
   {
-    "name":"Bronco",
-    "address":"39 Rue des Petites Écuries, 75010 Paris",
-    "lat":48.8737815,
-    "lng":2.3501649,
-    "ratings":[
-       {
-          "stars":4,
-          "comment":"Great! But not many veggie options."
-       },
-       {
-          "stars":5,
-          "comment":"My favorite restaurant!"
-       }
-    ]
+    "name": "Fab Lab Egypt",
+    "image": "fab-lab-egypt.jpg",
+    "address": "Villa 35 - 100 st. - Near Al Horia Square, Maadi, Maadi Al Khabiri Ash Sharqeyah, Cairo, Cairo Governorate",
+    "phone": "0101 746 5650",
+    "lat": 29.96175,
+    "lng": 31.2492591,
+    "facebook": "https://www.facebook.com/fablab.egypt/",
+    "rating": 1
   },
   {
-    "name":"Babalou",
-    "address":"4 Rue Lamarck, 75018 Paris",
-    "lat":48.8865035,
-    "lng":2.3442197,
-    "ratings":[
-       {
-          "stars":5,
-          "comment":"Tiny pizzeria next to Sacre Coeur!"
-       },
-       {
-          "stars":3,
-          "comment":"Meh, it was fine."
-       }
-    ]
+    "name": "Makanak Office Space",
+    "image": "makanak-office-space.jpg",
+    "address": "23 El-Nahda Street, 7 St, Maadi Sarayat, El Maleka Tower, Second Floor. Maadi, Maadi Al Khabiri Ash Sharqeyah, Cairo, Cairo Governorate 11431",
+    "phone": "0120 000 2092",
+    "lat": 29.9601,
+    "lng": 31.2532501,
+    "facebook": "https://www.facebook.com/makanakoffice/",
+    "rating": 5
   }
 ]
 
@@ -107,8 +71,8 @@ class App extends Component {
   state = {
     places: places,
     placesInfo: {},
-    lat: 48.8865035,
-    lng: 2.3442197,
+    lat: 29.96175,
+    lng: 31.2492591,
     zoom: 14
   }
 
@@ -156,13 +120,13 @@ class App extends Component {
       // `infowWindow` content
       let content = `
         <div class='infowindow'>
-          <img src='https://freight.cargo.site/w/750/i/32d0b948cde740a2404c2f38ba610633d2200c9757c50bba5a9d2114a4d740ad/DSC_0058.JPG' />
+        <img src='./images/${place.image}'/>
           <div class='details'>
             <h2>${place.name}</h2>
             <p class='location'><i class="fas fa-map-marker-alt"></i> ${place.address}</p>
           </div>
         </div>
-      `
+      `;
 
       // Show `infoWindow` on Marker Click
       marker.addListener('click', function() {
@@ -198,11 +162,15 @@ class App extends Component {
 
           {this.state.places.map((place, index) => (
             <div className="restaurant" key={index}>
-              <img src='https://freight.cargo.site/w/750/i/32d0b948cde740a2404c2f38ba610633d2200c9757c50bba5a9d2114a4d740ad/DSC_0058.JPG'/>
+              <img 
+                src={'./images/' + place.image} 
+                alt={place.name} 
+                title={place.name}
+              />
               <div className="details">
                 <h2 className="name">{place.name}</h2>
                 <div className="review">
-                  <ul className="stars">
+                  <ul className={'stars rate-' + place.rating}>
                     <li><i class="fas fa-star"></i></li>
                     <li><i class="fas fa-star"></i></li>
                     <li><i class="fas fa-star"></i></li>
@@ -211,6 +179,8 @@ class App extends Component {
                   </ul>
                 </div>
                 <ul className="info">
+                  <li><a href={place.facebook}><i class="fab fa-facebook"></i></a></li>
+                  <li><i className="fas fa-phone-alt"></i><a href={'tel:' + place.phone}>{place.phone}</a></li>
                   <li><i className="fas fa-map-marker-alt"></i> {place.address}</li>
                 </ul>
               </div>
