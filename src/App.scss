@@ -17,59 +17,113 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
     }
 
     #map {
-        width: 75%;
+        width: 60%;
     }
 
     .restaurants {
-        width: 25%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-gap: 1.5rem;
+        width: 40%;
         max-height: 100vh;
         overflow-y: scroll;
-        padding: 1em 1em 1em 0;
+        padding: 1rem;
         background: #fff;
 
         .restaurant {
-            margin-bottom: 1em;
-            padding-left: 0.75em;
-            border-left: 3px solid transparent;
-            transition: all 150ms ease;
+            background: #fff;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: -3px 5px 20px 0 rgba(0,0,0,.1);
+            transition: all .3s cubic-bezier(0,0,.2,1);
 
-            .name {
-                margin-bottom: 0.25em;
-                font-size: 1.4em;
-                color: #4611a7;
+            img {
+                width: 100%;
+                height: 250px;
+                border-top-right-radius: 10px;
+                border-top-left-radius: 10px;
             }
 
-            .info {
-                list-style: none;
+            .details {
+                padding: 1rem 1.5rem;
 
-                li {
-                    font-size: 0.9em;
+                .name {
+                    margin-bottom: 0.75rem;
+                    font-size: 1.4em;
+                    color: #4611a7;
+                }
 
-                    i {
-                        opacity: 0.3;
+                .review {
+                    margin-bottom: 1rem;
+
+                    .stars {
+                        list-style: none;
+
+                        li {
+                            display: inline-block;
+                            color: #eee;
+                        }
+                    }
+
+                    .rate-5 {
+                        li:nth-child(1), li:nth-child(2), li:nth-child(3), li:nth-child(4), li:nth-child(5) {
+                            color: #4611a7;
+                        }
+                    }
+
+                    .rate-4 {
+                        li:nth-child(1), li:nth-child(2), li:nth-child(3), li:nth-child(4) {
+                            color: #4611a7;
+                        }
+                    }
+
+                    .rate-3 {
+                        li:nth-child(1), li:nth-child(2), li:nth-child(3) {
+                            color: #4611a7;
+                        }
+                    }
+
+                    .rate-2 {
+                        li:nth-child(1), li:nth-child(2) {
+                            color: #4611a7;
+                        }
+                    }
+
+                    .rate-1 {
+                        li:nth-child(1) {
+                            color: #4611a7;
+                        }
+                    }
+                }
+    
+                .info {
+                    list-style: none;
+    
+                    li {
+                        font-size: 0.9em;
+    
+                        i {
+                            opacity: 0.3;
+                        }
                     }
                 }
             }
 
-            &:hover {
-                border-color:#4611a7;
-            }
         }
     }
 }
 
 /** Popup Window **/
-.mapboxgl-popup-content {
+.infowindow {
+    width: 225px;
     padding: 0;
 
     img {
-        width: 100%;
+        object-fit: cover;
         max-height: 225px;
     }
 
     .details {
-        padding: 10px;
-
         h2 {
             margin-bottom: 0.25em;
             font-size: 2em;
@@ -82,22 +136,6 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
     
             i {
                 opacity: 0.3;
-            }
-        }
-    
-        .rate {
-
-            .rate-info {
-                margin-bottom: 0.25em;
-                
-                .user, .interaction {
-                    font-weight: bold;
-                }
-            }
-
-            p {
-                font-size: 1.1em;
-                line-height: 1.3em;
             }
         }
     }

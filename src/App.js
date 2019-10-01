@@ -1,15 +1,114 @@
 import React, { Component } from 'react';
 import './App.scss';
 
+const places = [
+  {
+     "name":"Bronco",
+     "address":"39 Rue des Petites Écuries, 75010 Paris",
+     "lat":48.8737815,
+     "lng":2.3501649,
+     "ratings":[
+        {
+           "stars":4,
+           "comment":"Great! But not many veggie options."
+        },
+        {
+           "stars":5,
+           "comment":"My favorite restaurant!"
+        }
+     ]
+  },
+  {
+     "name":"Babalou",
+     "address":"4 Rue Lamarck, 75018 Paris",
+     "lat":48.8865035,
+     "lng":2.3442197,
+     "ratings":[
+        {
+           "stars":5,
+           "comment":"Tiny pizzeria next to Sacre Coeur!"
+        },
+        {
+           "stars":3,
+           "comment":"Meh, it was fine."
+        }
+     ]
+  },
+  {
+    "name":"Bronco",
+    "address":"39 Rue des Petites Écuries, 75010 Paris",
+    "lat":48.8737815,
+    "lng":2.3501649,
+    "ratings":[
+       {
+          "stars":4,
+          "comment":"Great! But not many veggie options."
+       },
+       {
+          "stars":5,
+          "comment":"My favorite restaurant!"
+       }
+    ]
+  },
+  {
+    "name":"Babalou",
+    "address":"4 Rue Lamarck, 75018 Paris",
+    "lat":48.8865035,
+    "lng":2.3442197,
+    "ratings":[
+       {
+          "stars":5,
+          "comment":"Tiny pizzeria next to Sacre Coeur!"
+       },
+       {
+          "stars":3,
+          "comment":"Meh, it was fine."
+       }
+    ]
+  },
+  {
+    "name":"Bronco",
+    "address":"39 Rue des Petites Écuries, 75010 Paris",
+    "lat":48.8737815,
+    "lng":2.3501649,
+    "ratings":[
+       {
+          "stars":4,
+          "comment":"Great! But not many veggie options."
+       },
+       {
+          "stars":5,
+          "comment":"My favorite restaurant!"
+       }
+    ]
+  },
+  {
+    "name":"Babalou",
+    "address":"4 Rue Lamarck, 75018 Paris",
+    "lat":48.8865035,
+    "lng":2.3442197,
+    "ratings":[
+       {
+          "stars":5,
+          "comment":"Tiny pizzeria next to Sacre Coeur!"
+       },
+       {
+          "stars":3,
+          "comment":"Meh, it was fine."
+       }
+    ]
+  }
+]
+
 var map;
 
 class App extends Component {
 
   state = {
-    places: [],
+    places: places,
     placesInfo: {},
-    lat: 37.779635,
-    lng: -122.418856,
+    lat: 48.8865035,
+    lng: 2.3442197,
     zoom: 14
   }
 
@@ -27,12 +126,52 @@ class App extends Component {
     let {lat, lng} = this.state;
     map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat, lng},
-      zoom: 8
+      zoom: 14
     });
+
+    // Place Markers
+    this.placeMarkers();
   }
 
   placeMarkers = () => {
 
+    // Places Data
+    let {places} = this.state;
+
+    // Add `infowWindow`
+    let infowindow = new window.google.maps.InfoWindow({
+      content: ''
+    })
+
+    places.map(place => {
+
+      // Add Marker
+      var marker = new window.google.maps.Marker({
+        position: {lat: place.lat, lng: place.lng},
+        map: map,
+        animation: window.google.maps.Animation.DROP,
+        title: place.name
+      });
+
+      // `infowWindow` content
+      let content = `
+        <div class='infowindow'>
+          <img src='https://freight.cargo.site/w/750/i/32d0b948cde740a2404c2f38ba610633d2200c9757c50bba5a9d2114a4d740ad/DSC_0058.JPG' />
+          <div class='details'>
+            <h2>${place.name}</h2>
+            <p class='location'><i class="fas fa-map-marker-alt"></i> ${place.address}</p>
+          </div>
+        </div>
+      `
+
+      // Show `infoWindow` on Marker Click
+      marker.addListener('click', function() {
+        infowindow.close();
+        infowindow.setContent(content);
+        infowindow.open(map, marker);
+      });
+
+    })
   }
 
   getUserLocation = () => {
@@ -54,20 +193,31 @@ class App extends Component {
   
   render() {
     return (
-      <div className="App">
-        <div id="map"></div>
-        
+      <div className="App">        
         <div className="restaurants">
-          {/* <div className="restaurant" key={index}>
-            <img src={imgUrl}/>
-            <h2 className="name">{place.venue.name}</h2>
-            <p>{review}</p>
-            <ul className="info">
-              <li><i className="fas fa-map-marker-alt"></i> {place.venue.location.formattedAddress[0]}, {place.venue.location.formattedAddress[1]}, {place.venue.location.formattedAddress[2]}</li>
-              <li></li>
-            </ul>
-          </div> */}
+
+          {this.state.places.map((place, index) => (
+            <div className="restaurant" key={index}>
+              <img src='https://freight.cargo.site/w/750/i/32d0b948cde740a2404c2f38ba610633d2200c9757c50bba5a9d2114a4d740ad/DSC_0058.JPG'/>
+              <div className="details">
+                <h2 className="name">{place.name}</h2>
+                <div className="review">
+                  <ul className="stars">
+                    <li><i class="fas fa-star"></i></li>
+                    <li><i class="fas fa-star"></i></li>
+                    <li><i class="fas fa-star"></i></li>
+                    <li><i class="fas fa-star"></i></li>
+                    <li><i class="fas fa-star"></i></li>
+                  </ul>
+                </div>
+                <ul className="info">
+                  <li><i className="fas fa-map-marker-alt"></i> {place.address}</li>
+                </ul>
+              </div>
+            </div>
+            ))}
         </div>
+        <div id="map"></div>
       </div>
     );
   }
