@@ -10,7 +10,24 @@ const places = [
     "lat": 29.9612892,
     "lng": 31.2483158,
     "facebook": "https://www.facebook.com/vevospace/",
-    "rating": 3
+    "rating": 3,
+    "reviews": [
+      {
+        "review_user": "First Last 1",
+        "review_text": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet, porro!",
+        "review_rate": 4
+      },
+      {
+        "review_user": "First Last 2",
+        "review_text": "Ullam nesciunt iure dolores, nemo aperiam alias atque quos eum necessitatibus ex.",
+        "review_rate": 3
+      },
+      {
+        "review_user": "First Last 3",
+        "review_text": "Earum temporibus amet dicta excepturi repellendus quo rerum doloremque, beatae illum optio? Vero cum saepe corrupti!",
+        "review_rate": 5
+      }
+    ]
   },
   {
     "name": "Fab Lab Egypt",
@@ -30,37 +47,7 @@ const places = [
     "lat": 29.9601,
     "lng": 31.2532501,
     "facebook": "https://www.facebook.com/makanakoffice/",
-    "rating": 5
-  },
-  {
-    "name": "Vevo Co-working Space",
-    "image": "vevo-co-working-space.jpg",
-    "address": "El-Mohandes El-Kordy, Maadi Al Khabiri Al Wasti, Al Maadi, Cairo, Egypt",
-    "phone": "0101 273 2732",
-    "lat": 29.9612892,
-    "lng": 31.2483158,
-    "facebook": "https://www.facebook.com/vevospace/",
-    "rating": 2
-  },
-  {
-    "name": "Fab Lab Egypt",
-    "image": "fab-lab-egypt.jpg",
-    "address": "Villa 35 - 100 st. - Near Al Horia Square, Maadi, Maadi Al Khabiri Ash Sharqeyah, Cairo, Cairo Governorate",
-    "phone": "0101 746 5650",
-    "lat": 29.96175,
-    "lng": 31.2492591,
-    "facebook": "https://www.facebook.com/fablab.egypt/",
-    "rating": 1
-  },
-  {
-    "name": "Makanak Office Space",
-    "image": "makanak-office-space.jpg",
-    "address": "23 El-Nahda Street, 7 St, Maadi Sarayat, El Maleka Tower, Second Floor. Maadi, Maadi Al Khabiri Ash Sharqeyah, Cairo, Cairo Governorate 11431",
-    "phone": "0120 000 2092",
-    "lat": 29.9601,
-    "lng": 31.2532501,
-    "facebook": "https://www.facebook.com/makanakoffice/",
-    "rating": 5
+    "rating": 3,
   }
 ]
 
@@ -99,7 +86,7 @@ class App extends Component {
 
   placeMarkers = () => {
 
-    // Places Data
+    // Cache
     let {places} = this.state;
 
     // Add `infowWindow`
@@ -107,6 +94,7 @@ class App extends Component {
       content: ''
     })
 
+    // Place Markers
     places.map(place => {
 
       // Add Marker
@@ -136,6 +124,8 @@ class App extends Component {
       });
 
     })
+
+    // 
   }
 
   getUserLocation = () => {
@@ -159,7 +149,6 @@ class App extends Component {
     return (
       <div className="App">        
         <div className="restaurants">
-
           {this.state.places.map((place, index) => (
             <div className="restaurant" key={index}>
               <img 
@@ -171,15 +160,19 @@ class App extends Component {
                 <h2 className="name">{place.name}</h2>
                 <div className="review">
                   <ul className={'stars rate-' + place.rating}>
-                    <li><i class="fas fa-star"></i></li>
-                    <li><i class="fas fa-star"></i></li>
-                    <li><i class="fas fa-star"></i></li>
-                    <li><i class="fas fa-star"></i></li>
-                    <li><i class="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
                   </ul>
+                  <span className="all-reviews">Show All</span>
+                  <span className="add-review">Add Review</span>
                 </div>
                 <ul className="info">
-                  <li><a href={place.facebook}><i class="fab fa-facebook"></i></a></li>
+                  <li>
+                    <a href={place.facebook}><i class="fab fa-facebook"></i></a>
+                  </li>
                   <li><i className="fas fa-phone-alt"></i><a href={'tel:' + place.phone}>{place.phone}</a></li>
                   <li><i className="fas fa-map-marker-alt"></i> {place.address}</li>
                 </ul>
@@ -188,6 +181,39 @@ class App extends Component {
             ))}
         </div>
         <div id="map"></div>
+        <div className="modal">
+          <div className="inner">
+            <span className="close" id="close-modal">X</span>
+            <div className="review-list">
+              <div className="review">
+                <div className="review-info">
+                  <h3>First Last #1</h3>
+                  <ul className={'stars rate-3'}>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                  </ul>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error distinctio quidem dolorem inventore pariatur asperiores.</p>
+                </div>
+              </div>
+              <div className="review">
+                <div className="review-info">
+                  <h3>First Last #1</h3>
+                  <ul className={'stars rate-3'}>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                    <li><i className="fas fa-star"></i></li>
+                  </ul>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error distinctio quidem dolorem inventore pariatur asperiores.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
