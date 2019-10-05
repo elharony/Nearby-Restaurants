@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
     font-family: 'Lato', sans-serif;
 }
 
-
+/** Utils **/
 .stars {
     display: inline-block;
     list-style: none;
@@ -50,6 +50,38 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
         color: #4611a7;
     }
 }
+
+
+.input-wrap {
+    margin-bottom: 15px;
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1rem;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    textarea {
+        resize: vertical;
+        max-height: 150px;
+    }
+
+    button[type='submit'] {
+        padding: 10px 15px;
+        background: #2918b1;
+        color: #fff;
+        font-size: 0.9rem;
+    }
+}
+
+
 
 
 .App {
@@ -190,11 +222,12 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
 
     .inner {
         position: relative;
-        padding: 10px;
+        padding: 20px;
         width: 300px;
         max-width: 60%;
         height: 400px;
         background: #eee;
+        box-sizing: border-box;
 
         .close {
             position: absolute;

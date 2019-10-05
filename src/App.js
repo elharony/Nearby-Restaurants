@@ -220,8 +220,8 @@ class App extends Component {
           </div>
         </div>
         <div className="modal" id="add-review-modal">
-          <span className="close" id="close-add-review-modal" onClick={this.closeReviewModal}>X</span>
           <div className="inner">
+            <span className="close" id="close-add-review-modal" onClick={this.closeReviewModal}>X</span>
             <form id="add-review-form" onSubmit={(e) => this.addReview(e)}>
               <div className="input-wrap">
                 <label htmlFor="user-fullname">Full Name:</label>
@@ -239,9 +239,11 @@ class App extends Component {
               </div>
               <div className="input-wrap">
                 <label htmlFor="user-review">Review:</label>
-                <input type="text" id="user-review" placeholder="Review" required/>
+                <textarea id="user-review" cols="30" rows="3" placeholder="Review..."></textarea>
               </div>
-              <button type="submit">Add Review</button>
+              <div className="input-wrap">
+                <button type="submit">Add Review</button>
+              </div>
             </form>
           </div>
         </div>
