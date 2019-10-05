@@ -94,9 +94,9 @@ class App extends Component {
     })
   }
 
-  // Modal
+  // Show All Reviews
   openModal = (placeIndex) => {
-    let modal = document.querySelector('.modal');
+    let modal = document.querySelector('#all-reviews-modal');
     modal.classList.add('open');
     
     // Update `Selected Place`
@@ -105,9 +105,52 @@ class App extends Component {
     })
   }
   closeModal = () => {
-    let modal = document.querySelector('.modal');
+    let modal = document.querySelector('#all-reviews-modal');
     modal.classList.remove('open');
   }
+
+  // Add Review
+  openReviewModal = (placeIndex) => {
+    let modal = document.querySelector('#add-review-modal');
+    modal.classList.add('open');
+
+    // Update `Selected Place`
+    this.setState({
+      selectedPlace: placeIndex
+    })
+  }
+  closeReviewModal = () => {
+    let modal = document.querySelector('#add-review-modal');
+    modal.classList.remove('open');
+  }
+  addReview(e) {
+    let {places, selectedPlace} = this.state;
+
+    // Stop redirect
+    e.preventDefault();
+
+    // Cache user inputs
+    let userFullname = document.querySelector('#user-fullname').value;
+    let userRating = document.querySelector('#user-rating').value;
+    let userReview = document.querySelector('#user-review').value;
+
+    // Inject the new review to the selected place
+    let currentReviews = this.state.places[this.state.selectedPlace].reviews;
+    let newReview = {
+      "review_user": userFullname,
+      "review_text": userReview,
+      "review_rate": userRating
+    }
+    this.setState(prevState => {
+      const newPlaces = [...prevState.places];
+      newPlaces[selectedPlace].reviews.push(newReview);
+      return {places: newPlaces};
+    })
+
+    // Close the popup modal
+    this.closeReviewModal();
+  }
+
   
   render() {
     return (
@@ -133,7 +176,7 @@ class App extends Component {
                         <li><i className="fas fa-star"></i></li>
                       </ul>
                       <span className="all-reviews" onClick={(e) => this.openModal(index)}>Show All</span>
-                      <span className="add-review">Add Review</span>
+                      <span className="add-review" onClick={(e) => this.openReviewModal(index)}>Add Review</span>
                     </div>
                     <ul className="info">
                       <li>
@@ -150,7 +193,7 @@ class App extends Component {
           }
         </div>
         <div id="map"></div>
-        <div className="modal">
+        <div className="modal" id="all-reviews-modal">
           <div className="inner">
             <span className="close" id="close-modal" onClick={this.closeModal}>X</span>
             <div className="review-list">
@@ -174,6 +217,32 @@ class App extends Component {
             }
               
             </div>
+          </div>
+        </div>
+        <div className="modal" id="add-review-modal">
+          <span className="close" id="close-add-review-modal" onClick={this.closeReviewModal}>X</span>
+          <div className="inner">
+            <form id="add-review-form" onSubmit={(e) => this.addReview(e)}>
+              <div className="input-wrap">
+                <label htmlFor="user-fullname">Full Name:</label>
+                <input type="text" id="user-fullname" placeholder="John Doe" required/>
+              </div>
+              <div className="input-wrap">
+                <label htmlFor="user-rating">Rate:</label>
+                <select id="user-rating" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <div className="input-wrap">
+                <label htmlFor="user-review">Review:</label>
+                <input type="text" id="user-review" placeholder="Review" required/>
+              </div>
+              <button type="submit">Add Review</button>
+            </form>
           </div>
         </div>
       </div>
