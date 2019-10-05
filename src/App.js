@@ -13,17 +13,17 @@ const places = [
     "rating": 3,
     "reviews": [
       {
-        "review_user": "First Last 1",
+        "review_user": "Vevo Last 1",
         "review_text": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet, porro!",
         "review_rate": 4
       },
       {
-        "review_user": "First Last 2",
+        "review_user": "Vevo Last 2",
         "review_text": "Ullam nesciunt iure dolores, nemo aperiam alias atque quos eum necessitatibus ex.",
         "review_rate": 3
       },
       {
-        "review_user": "First Last 3",
+        "review_user": "Vevo Last 3",
         "review_text": "Earum temporibus amet dicta excepturi repellendus quo rerum doloremque, beatae illum optio? Vero cum saepe corrupti!",
         "review_rate": 5
       }
@@ -37,7 +37,24 @@ const places = [
     "lat": 29.96175,
     "lng": 31.2492591,
     "facebook": "https://www.facebook.com/fablab.egypt/",
-    "rating": 4
+    "rating": 4,
+    "reviews": [
+      {
+        "review_user": "Fab Lab Last 1",
+        "review_text": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet, porro!",
+        "review_rate": 4
+      },
+      {
+        "review_user": "Fab Lab Last 2",
+        "review_text": "Ullam nesciunt iure dolores, nemo aperiam alias atque quos eum necessitatibus ex.",
+        "review_rate": 3
+      },
+      {
+        "review_user": "Fab Lab Last 3",
+        "review_text": "Earum temporibus amet dicta excepturi repellendus quo rerum doloremque, beatae illum optio? Vero cum saepe corrupti!",
+        "review_rate": 5
+      }
+    ]
   },
   {
     "name": "Makanak Office Space",
@@ -48,16 +65,32 @@ const places = [
     "lng": 31.2532501,
     "facebook": "https://www.facebook.com/makanakoffice/",
     "rating": 3,
+    "reviews": [
+      {
+        "review_user": "Makanak Last 1",
+        "review_text": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet, porro!",
+        "review_rate": 4
+      },
+      {
+        "review_user": "Makanak Last 2",
+        "review_text": "Ullam nesciunt iure dolores, nemo aperiam alias atque quos eum necessitatibus ex.",
+        "review_rate": 3
+      },
+      {
+        "review_user": "Makanak Last 3",
+        "review_text": "Earum temporibus amet dicta excepturi repellendus quo rerum doloremque, beatae illum optio? Vero cum saepe corrupti!",
+        "review_rate": 5
+      }
+    ]
   }
 ]
-
 var map;
 
 class App extends Component {
 
   state = {
     places: places,
-    placesInfo: {},
+    selectedPlace: 0,
     lat: 29.96175,
     lng: 31.2492591,
     zoom: 14
@@ -69,7 +102,7 @@ class App extends Component {
   }
   
   renderMap = () => {
-    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDSeZUcFX7VMpbO6PrA57UR_J3__pl0f2c&callback=initMap");
+    // loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDSeZUcFX7VMpbO6PrA57UR_J3__pl0f2c&callback=initMap");
     window.initMap = this.initMap;
   }
 
@@ -124,8 +157,6 @@ class App extends Component {
       });
 
     })
-
-    // 
   }
 
   getUserLocation = () => {
@@ -144,73 +175,86 @@ class App extends Component {
       zoom: 25
     })
   }
+
+  // Modal
+  openModal = (placeIndex) => {
+    let modal = document.querySelector('.modal');
+    modal.classList.add('open');
+    
+    // Update `Selected Place`
+    this.setState({
+      selectedPlace: placeIndex
+    })
+  }
+  closeModal = () => {
+    let modal = document.querySelector('.modal');
+    modal.classList.remove('open');
+  }
   
   render() {
     return (
       <div className="App">        
         <div className="restaurants">
-          {this.state.places.map((place, index) => (
-            <div className="restaurant" key={index}>
-              <img 
-                src={'./images/' + place.image} 
-                alt={place.name} 
-                title={place.name}
-              />
-              <div className="details">
-                <h2 className="name">{place.name}</h2>
-                <div className="review">
-                  <ul className={'stars rate-' + place.rating}>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                  </ul>
-                  <span className="all-reviews">Show All</span>
-                  <span className="add-review">Add Review</span>
+          {
+            this.state.places.map((place, index) => {
+              return (
+                <div className="restaurant" key={index}>
+                  <img 
+                    src={'./images/' + place.image} 
+                    alt={place.name} 
+                    title={place.name}
+                  />
+                  <div className="details">
+                    <h2 className="name">{place.name}</h2>
+                    <div className="review">
+                      <ul className={'stars rate-' + place.rating}>
+                        <li><i className="fas fa-star"></i></li>
+                        <li><i className="fas fa-star"></i></li>
+                        <li><i className="fas fa-star"></i></li>
+                        <li><i className="fas fa-star"></i></li>
+                        <li><i className="fas fa-star"></i></li>
+                      </ul>
+                      <span className="all-reviews" onClick={(e) => this.openModal(index)}>Show All</span>
+                      <span className="add-review">Add Review</span>
+                    </div>
+                    <ul className="info">
+                      <li>
+                        <a href={place.facebook}><i className="fab fa-facebook"></i></a>
+                      </li>
+                      <li><i className="fas fa-phone-alt"></i><a href={'tel:' + place.phone}>{place.phone}</a></li>
+                      <li><i className="fas fa-map-marker-alt"></i> {place.address}</li>
+                    </ul>
+                  </div>
+
                 </div>
-                <ul className="info">
-                  <li>
-                    <a href={place.facebook}><i class="fab fa-facebook"></i></a>
-                  </li>
-                  <li><i className="fas fa-phone-alt"></i><a href={'tel:' + place.phone}>{place.phone}</a></li>
-                  <li><i className="fas fa-map-marker-alt"></i> {place.address}</li>
-                </ul>
-              </div>
-            </div>
-            ))}
+              )
+            })
+          }
         </div>
         <div id="map"></div>
         <div className="modal">
           <div className="inner">
-            <span className="close" id="close-modal">X</span>
+            <span className="close" id="close-modal" onClick={this.closeModal}>X</span>
             <div className="review-list">
-              <div className="review">
-                <div className="review-info">
-                  <h3>First Last #1</h3>
-                  <ul className={'stars rate-3'}>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                  </ul>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error distinctio quidem dolorem inventore pariatur asperiores.</p>
+
+            {
+              this.state.places[this.state.selectedPlace].reviews.map((review, index) => (
+                <div className="review" key={index}>
+                  <div className="review-info">
+                    <h3>{review.review_user}</h3>
+                    <ul className={'stars rate-' + review.review_rate}>
+                      <li><i className="fas fa-star"></i></li>
+                      <li><i className="fas fa-star"></i></li>
+                      <li><i className="fas fa-star"></i></li>
+                      <li><i className="fas fa-star"></i></li>
+                      <li><i className="fas fa-star"></i></li>
+                    </ul>
+                    <p>{review.review_text}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="review">
-                <div className="review-info">
-                  <h3>First Last #1</h3>
-                  <ul className={'stars rate-3'}>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                    <li><i className="fas fa-star"></i></li>
-                  </ul>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Error distinctio quidem dolorem inventore pariatur asperiores.</p>
-                </div>
-              </div>
+              ))
+            }
+              
             </div>
           </div>
         </div>
@@ -229,3 +273,13 @@ function loadScript(url) {
 }
 
 export default App;
+
+/**
+ * Features
+ * --------
+ * - Filter by Rating
+ * - Add new Co-Working Space 
+ * 
+ * First mentor to be chosen Software Architect Path at OC, it's a Master Degree!
+ * I was raised in Communist Europe, and it wasn't flowers. 
+ */
