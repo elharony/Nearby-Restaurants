@@ -99,7 +99,7 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
     .restaurants {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        grid-gap: 2rem;
+        grid-gap: 1rem;
         width: 45%;
         max-height: 100vh;
         padding: 1rem;
@@ -225,7 +225,6 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
         padding: 20px;
         width: 300px;
         max-width: 60%;
-        height: 400px;
         background: #eee;
         box-sizing: border-box;
 

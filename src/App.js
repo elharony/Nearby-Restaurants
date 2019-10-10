@@ -135,7 +135,6 @@ class App extends Component {
     let userReview = document.querySelector('#user-review').value;
 
     // Inject the new review to the selected place
-    let currentReviews = this.state.places[this.state.selectedPlace].reviews;
     let newReview = {
       "review_user": userFullname,
       "review_text": userReview,
@@ -150,11 +149,55 @@ class App extends Component {
     // Close the popup modal
     this.closeReviewModal();
   }
+  openPlaceModal = () => {
+    let modal = document.querySelector('#add-place-modal');
+    modal.classList.add('open');
+  }
+  closePlaceModal = () => {
+    let modal = document.querySelector('#add-place-modal');
+    modal.classList.remove('open');
+  }
+  addPlace(e) {
+    let {places} = this.state;
+
+    // Stop redirect
+    e.preventDefault();
+
+    // Cache user inputs
+    let placeTitle = document.querySelector('#place-title').value;
+    let placeAddress = document.querySelector('#place-address').value;
+    let placeLat = document.querySelector('#place-lat').value;
+    let placeLng = document.querySelector('#place-lng').value;
+    let placePhone = document.querySelector('#place-phone').value;
+    let placeRate = document.querySelector('#place-rate').value;
+
+    // Inject the new review to the selected place
+    let newPlace = {
+      "name": placeTitle,
+      "image": '',
+      "address": placeAddress,
+      "phone": placePhone,
+      "lat": placeLat,
+      "lng": placeLng,
+      "rating": placeRate,
+      "reviews": []
+    }
+    
+    this.setState(prevState => {
+      const newPlaces = [...prevState.places];
+      newPlaces.push(newPlace);
+      return {places: newPlaces};
+    })
+
+    // Close the popup modal
+    this.closePlaceModal();
+  }
 
   
   render() {
     return (
-      <div className="App">        
+      <div className="App">
+        <button onClick={this.openPlaceModal}>Add New Place</button>
         <div className="restaurants">
           {
             this.state.places.map((place, index) => {
@@ -179,9 +222,9 @@ class App extends Component {
                       <span className="add-review" onClick={(e) => this.openReviewModal(index)}>Add Review</span>
                     </div>
                     <ul className="info">
-                      <li>
+                      {/* <li>
                         <a href={place.facebook}><i className="fab fa-facebook"></i></a>
-                      </li>
+                      </li> */}
                       <li><i className="fas fa-phone-alt"></i><a href={'tel:' + place.phone}>{place.phone}</a></li>
                       <li><i className="fas fa-map-marker-alt"></i> {place.address}</li>
                     </ul>
@@ -243,6 +286,46 @@ class App extends Component {
               </div>
               <div className="input-wrap">
                 <button type="submit">Add Review</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div className="modal" id="add-place-modal">
+          <div className="inner">
+            <span className="close" id="close-add-place-modal" onClick={this.closePlaceModal}>X</span>
+            <form id="add-place-form" onSubmit={(e) => this.addPlace(e)}>
+              <div className="input-wrap">
+                <label htmlFor="place-title">Place Title:</label>
+                <input type="text" id="place-title" placeholder="Makannak Co-Working Space" required/>
+              </div>
+              <div className="input-wrap">
+                <label htmlFor="place-address">Address:</label>
+                <input type="text" id="place-address" placeholder="Villa 90 - Near Al Horia Square, Maadi, Cairo, Egypt" required/>
+              </div>
+              <div className="input-wrap">
+                <label htmlFor="place-lat">Latitude:</label>
+                <input type="text" id="place-lat" placeholder="29.9612892" required/>
+              </div>
+              <div className="input-wrap">
+                <label htmlFor="place-lng">Longitude:</label>
+                <input type="text" id="place-lng" placeholder="31.2483158" required/>
+              </div>
+              <div className="input-wrap">
+                <label htmlFor="place-phone">Phone:</label>
+                <input type="tel" id="place-phone" placeholder="01112134515" required/>
+              </div>
+              <div className="input-wrap">
+                <label htmlFor="place-rate">Rating:</label>
+                <select id="place-rate" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </div>
+              <div className="input-wrap">
+                <button type="submit">Add New Place</button>
               </div>
             </form>
           </div>
