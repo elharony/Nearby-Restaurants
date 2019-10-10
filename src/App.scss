@@ -9,6 +9,10 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
     font-family: 'Lato', sans-serif;
 }
 
+button {
+    cursor: pointer;
+}
+
 /** Utils **/
 .stars {
     display: inline-block;
@@ -96,86 +100,110 @@ h1, h2, h3, h4, h5, h6, div, p, span, li {
         width: 55%;
     }
 
-    .restaurants {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        grid-gap: 1rem;
+    .aside {
         width: 45%;
-        max-height: 100vh;
-        padding: 1rem;
-        overflow-y: scroll;
-        background: #fff;
-        box-sizing: border-box;
 
-        .restaurant {
+        .options {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 1rem 0 1rem 1rem;
+            box-sizing: border-box;
+
+            .sort {
+                width: 250px;
+            }
+
+            button {
+                width: 150px;
+                padding: 10px;
+                margin-left: auto;
+                background: #4611a7;
+                color: #fff
+            }
+        }
+    
+        .restaurants {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-gap: 1rem;
+            max-height: 100vh;
+            padding: 0 1rem 1rem;
+            overflow-y: scroll;
             background: #fff;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: -3px 5px 20px 0 rgba(0,0,0,.1);
-            transition: all .3s cubic-bezier(0,0,.2,1);
-
-            img {
-                width: 100%;
-                max-height: 250px;
-                border-top-right-radius: 10px;
-                border-top-left-radius: 10px;
-            }
-
-            .details {
-                padding: 1rem 1.5rem;
-
-                .name {
-                    margin-bottom: 0.75rem;
-                    font-size: 1.5rem;
-                    color: #4611a7;
+            box-sizing: border-box;
+    
+            .restaurant {
+                background: #fff;
+                background-color: #fff;
+                border-radius: 10px;
+                box-shadow: -3px 5px 20px 0 rgba(0,0,0,.1);
+                transition: all .3s cubic-bezier(0,0,.2,1);
+    
+                img {
+                    width: 100%;
+                    max-height: 250px;
+                    border-top-right-radius: 10px;
+                    border-top-left-radius: 10px;
                 }
-
-                .review {
-                    margin-bottom: 1rem;
-                    display: flex;
-                    align-items: baseline;
-
-                    .all-reviews, .add-review {
-                        font-size: 0.9rem;
-                        cursor: pointer;
-                    }
-
-                    .all-reviews {
-                        margin: 0 10px;
-                        opacity: 0.5;
-                        text-decoration: underline;
-                    }
-
-                    .add-review {
+    
+                .details {
+                    padding: 1rem 1.5rem;
+    
+                    .name {
+                        margin-bottom: 0.75rem;
+                        font-size: 1.5rem;
                         color: #4611a7;
-                        opacity: 0.7;
+                    }
+    
+                    .review {
+                        margin-bottom: 1rem;
+                        display: flex;
+                        align-items: baseline;
+    
+                        .all-reviews, .add-review {
+                            font-size: 0.9rem;
+                            cursor: pointer;
+                        }
+    
+                        .all-reviews {
+                            margin: 0 10px;
+                            opacity: 0.5;
+                            text-decoration: underline;
+                        }
+    
+                        .add-review {
+                            color: #4611a7;
+                            opacity: 0.7;
+                        }
+                    }
+        
+                    .info {
+                        list-style: none;
+        
+                        li {
+                            margin-bottom: 0.5rem;
+        
+                            i {
+                                margin-right: 0.25rem;
+                                opacity: 0.3;
+                            }
+    
+                            a {
+                                color: #000;
+                                text-decoration: 1px #000;
+                            }
+                        }
                     }
                 }
     
-                .info {
-                    list-style: none;
-    
-                    li {
-                        margin-bottom: 0.5rem;
-    
-                        i {
-                            margin-right: 0.25rem;
-                            opacity: 0.3;
-                        }
-
-                        a {
-                            color: #000;
-                            text-decoration: 1px #000;
-                        }
-                    }
+                &:hover {
+                    transform: translateY(-5px);
                 }
-            }
-
-            &:hover {
-                transform: translateY(-5px);
             }
         }
     }
+
 }
 
 /** Popup Window **/

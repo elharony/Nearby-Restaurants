@@ -197,8 +197,20 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <button onClick={this.openPlaceModal}>Add New Place</button>
-        <div className="restaurants">
+        <div className="aside">
+          <div className="options">
+            <div className="sort">
+              Sort by Rate: <select id="sortby">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <button class="cta" onClick={this.openPlaceModal}>Add New Place</button>
+          </div>
+          <div className="restaurants">
           {
             this.state.places.map((place, index) => {
               return (
@@ -234,6 +246,7 @@ class App extends Component {
               )
             })
           }
+        </div>
         </div>
         <div id="map"></div>
         <div className="modal" id="all-reviews-modal">
