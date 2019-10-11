@@ -210,11 +210,11 @@ class App extends Component {
             </div>
             <button class="cta" onClick={this.openPlaceModal}>Add New Place</button>
           </div>
-          <div className="restaurants">
+          <div className="places">
           {
             this.state.places.map((place, index) => {
               return (
-                <div className="restaurant" key={index}>
+                <div className="place" key={index}>
                   <img 
                     src={'./images/' + place.image} 
                     alt={place.name} 
