@@ -22,7 +22,7 @@ class App extends Component {
   }
   
   renderMap = () => {
-    loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
+    // loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
     window.initMap = this.initMap;
   }
 
@@ -195,6 +195,25 @@ class App extends Component {
     this.closePlaceModal();
   }
 
+  handleSort = (e) => {
+    let sortedPlaces = this.state.places;
+    let sortOrder = e.target.value;
+
+    if(sortOrder === 'desc') { // Highest to lowest
+      sortedPlaces.sort(function (a, b) {
+        return b.rating - a.rating;
+      })
+    } else {
+      sortedPlaces.sort(function (a, b) {
+        return a.rating - b.rating;
+      })
+    }
+
+    this.setState({
+      places: sortedPlaces
+    })
+  }
+
   
   render() {
     return (
@@ -202,12 +221,9 @@ class App extends Component {
         <div className="aside">
           <div className="options">
             <div className="sort">
-              Sort by Rate: <select id="sortby">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
+              Sort by: <select id="sortby" onChange={this.handleSort}>
+                <option value="desc">Reviews: Best to Poor</option>
+                <option value="asc">Reviews: Poor to Best</option>
               </select>
             </div>
             <button className="cta" onClick={this.openPlaceModal}>Add New Place</button>
