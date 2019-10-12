@@ -210,7 +210,7 @@ class App extends Component {
                 <option value="5">5</option>
               </select>
             </div>
-            <button class="cta" onClick={this.openPlaceModal}>Add New Place</button>
+            <button className="cta" onClick={this.openPlaceModal}>Add New Place</button>
           </div>
           <div className="places">
           {
