@@ -4,7 +4,7 @@ import places from './places.js';
 
 const API_KEY =`${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
-var map;
+var map, infoWindow;
 
 class App extends Component {
 
@@ -18,11 +18,11 @@ class App extends Component {
 
   componentDidMount() {
     this.renderMap();
-    // this.getUserLocation();
+    this.handleSort('desc');
   }
   
   renderMap = () => {
-    // loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
+    loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
     window.initMap = this.initMap;
   }
 
@@ -33,8 +33,37 @@ class App extends Component {
       zoom: 14
     });
 
+    // Current Location
+    infoWindow = new window.google.maps.InfoWindow;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+        infoWindow.setPosition(pos);
+        infoWindow.setContent('My Location!');
+        infoWindow.open(map);
+        map.setCenter(pos);
+      }, function() {
+        this.handleLocationError(true, infoWindow, map.getCenter());
+      })
+    } else {
+      // Browser doesn't support Geolocation
+      this.handleLocationError(false, infoWindow, map.getCenter());
+    }
+
     // Place Markers
     this.placeMarkers();
+  }
+
+  handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+                          'Error: The Geolocation service failed.' :
+                          'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.open(map);
   }
 
   placeMarkers = () => {
@@ -76,23 +105,6 @@ class App extends Component {
         infowindow.open(map, marker);
       });
 
-    })
-  }
-
-  getUserLocation = () => {
-    let x = document.querySelector('#location');
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(this.showPosition);
-    } else {
-      x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-  }
-
-  showPosition = (position) => {
-    this.setState({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-      zoom: 25
     })
   }
 
@@ -194,10 +206,8 @@ class App extends Component {
     // Close the popup modal
     this.closePlaceModal();
   }
-
-  handleSort = (e) => {
+  handleSort = (sortOrder) => {
     let sortedPlaces = this.state.places;
-    let sortOrder = e.target.value;
 
     if(sortOrder === 'desc') { // Highest to lowest
       sortedPlaces.sort(function (a, b) {
@@ -221,7 +231,7 @@ class App extends Component {
         <div className="aside">
           <div className="options">
             <div className="sort">
-              Sort by: <select id="sortby" onChange={this.handleSort}>
+              Sort by: <select id="sortby" onChange={(e) => this.handleSort(e.target.value)}>
                 <option value="desc">Reviews: Best to Poor</option>
                 <option value="asc">Reviews: Poor to Best</option>
               </select>
