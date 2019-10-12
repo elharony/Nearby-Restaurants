@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.scss';
 import places from './places.js';
 
+const API_KEY =`${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+
 var map;
 
 class App extends Component {
@@ -20,7 +22,7 @@ class App extends Component {
   }
   
   renderMap = () => {
-    // loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyDSeZUcFX7VMpbO6PrA57UR_J3__pl0f2c&callback=initMap");
+    loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
     window.initMap = this.initMap;
   }
 
