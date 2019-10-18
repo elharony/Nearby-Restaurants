@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import './App.scss';
 import places from './places.js';
 
+/** Components */
+import Sidebar from './components/sidebar/sidebar';
+
 const API_KEY =`${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
 var map, infoWindow;
@@ -22,7 +25,7 @@ class App extends Component {
   }
   
   renderMap = () => {
-    loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
+    // loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
     window.initMap = this.initMap;
   }
 
@@ -228,54 +231,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="aside">
-          <div className="options">
-            <div className="sort">
-              Sort by: <select id="sortby" onChange={(e) => this.handleSort(e.target.value)}>
-                <option value="desc">Reviews: Best to Poor</option>
-                <option value="asc">Reviews: Poor to Best</option>
-              </select>
-            </div>
-            <button className="cta" onClick={this.openPlaceModal}>Add New Place</button>
-          </div>
-          <div className="places">
-          {
-            this.state.places.map((place, index) => {
-              return (
-                <div className="place" key={index}>
-                  <img 
-                    src={'./images/' + place.image} 
-                    alt={place.name} 
-                    title={place.name}
-                  />
-                  <div className="details">
-                    <h2 className="name">{place.name}</h2>
-                    <div className="review">
-                      <ul className={'stars rate-' + place.rating}>
-                        <li><i className="fas fa-star"></i></li>
-                        <li><i className="fas fa-star"></i></li>
-                        <li><i className="fas fa-star"></i></li>
-                        <li><i className="fas fa-star"></i></li>
-                        <li><i className="fas fa-star"></i></li>
-                      </ul>
-                      <span className="all-reviews" onClick={(e) => this.openModal(index)}>Show All</span>
-                      <span className="add-review" onClick={(e) => this.openReviewModal(index)}>Add Review</span>
-                    </div>
-                    <ul className="info">
-                      {/* <li>
-                        <a href={place.facebook}><i className="fab fa-facebook"></i></a>
-                      </li> */}
-                      <li><i className="fas fa-phone-alt"></i><a href={'tel:' + place.phone}>{place.phone}</a></li>
-                      <li><i className="fas fa-map-marker-alt"></i> {place.address}</li>
-                    </ul>
-                  </div>
-
-                </div>
-              )
-            })
-          }
-        </div>
-        </div>
+        <Sidebar 
+          places={this.state.places} 
+          openModal={this.openModal}
+          openReviewModal={this.openReviewModal}
+          handleSort={this.handleSort}
+        />
         <div id="map"></div>
         <div className="modal" id="all-reviews-modal">
           <div className="inner">
