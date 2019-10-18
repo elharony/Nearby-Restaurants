@@ -91,14 +91,6 @@ button {
 .App {
     display: flex;
     overflow: hidden;
-
-    #map, .places {
-        height: 100vh;
-    }
-
-    #map {
-        width: 55%;
-    }
 }
 
 /** Popup Window **/

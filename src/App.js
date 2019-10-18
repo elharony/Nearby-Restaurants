@@ -4,6 +4,7 @@ import places from './places.js';
 
 /** Components */
 import Sidebar from './components/sidebar/sidebar';
+import Map from './components/map/map';
 
 const API_KEY =`${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
@@ -237,7 +238,8 @@ class App extends Component {
           openReviewModal={this.openReviewModal}
           handleSort={this.handleSort}
         />
-        <div id="map"></div>
+        <Map />
+        
         <div className="modal" id="all-reviews-modal">
           <div className="inner">
             <span className="close" id="close-modal" onClick={this.closeModal}>X</span>
