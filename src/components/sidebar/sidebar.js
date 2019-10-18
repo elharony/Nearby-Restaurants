@@ -4,7 +4,7 @@ import './sidebar.scss';
 class Sidebar extends Component {
     render() {
 
-        let {places, openModal, openReviewModal, handleSort} = this.props;
+        let {places, openModal, openReviewModal, openPlaceModal, handleSort} = this.props;
 
         return (
             <div className="sidebar">
@@ -15,7 +15,7 @@ class Sidebar extends Component {
                         <option value="asc">Reviews: Poor to Best</option>
                         </select>
                     </div>
-                    <button className="cta" onClick={this.openPlaceModal}>Add New Place</button>
+                    <button className="cta" onClick={openPlaceModal}>Add New Place</button>
                 </div>
                 <div className="places">
                     {

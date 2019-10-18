@@ -236,6 +236,7 @@ class App extends Component {
           places={this.state.places} 
           openModal={this.openModal}
           openReviewModal={this.openReviewModal}
+          openPlaceModal={this.openPlaceModal}
           handleSort={this.handleSort}
         />
         <Map />
