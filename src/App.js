@@ -38,7 +38,23 @@ class App extends Component {
     });
 
     // Current Location
+    this.getCurrentLocation();
+
+    // Place Markers
+    this.placeMarkers();
+  }
+
+  getCurrentLocation = () => {
     infoWindow = new window.google.maps.InfoWindow;
+
+    let handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
+      infoWindow.setPosition(pos);
+      infoWindow.setContent(browserHasGeolocation ?
+                            'Error: The Geolocation service failed.' :
+                            'Error: Your browser doesn\'t support geolocation.');
+      infoWindow.open(map);
+    }
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
         var pos = {
@@ -57,22 +73,10 @@ class App extends Component {
       // Browser doesn't support Geolocation
       this.handleLocationError(false, infoWindow, map.getCenter());
     }
-
-    // Place Markers
-    this.placeMarkers();
-  }
-
-  handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-                          'Error: The Geolocation service failed.' :
-                          'Error: Your browser doesn\'t support geolocation.');
-    infoWindow.open(map);
   }
 
   placeMarkers = () => {
 
-    // Cache
     let {places} = this.state;
 
     // Add `infowWindow`
@@ -112,69 +116,6 @@ class App extends Component {
     })
   }
 
-  // Show All Reviews
-  openModal = (placeIndex) => {
-    let modal = document.querySelector('#all-reviews-modal');
-    modal.classList.add('open');
-    
-    // Update `Selected Place`
-    this.setState({
-      selectedPlace: placeIndex
-    })
-  }
-  closeModal = () => {
-    let modal = document.querySelector('#all-reviews-modal');
-    modal.classList.remove('open');
-  }
-
-  // Add Review
-  openReviewModal = (placeIndex) => {
-    let modal = document.querySelector('#add-review-modal');
-    modal.classList.add('open');
-
-    // Update `Selected Place`
-    this.setState({
-      selectedPlace: placeIndex
-    })
-  }
-  closeReviewModal = () => {
-    let modal = document.querySelector('#add-review-modal');
-    modal.classList.remove('open');
-  }
-  addReview(e) {
-    let {places, selectedPlace} = this.state;
-
-    // Stop redirect
-    e.preventDefault();
-
-    // Cache user inputs
-    let userFullname = document.querySelector('#user-fullname').value;
-    let userRating = document.querySelector('#user-rating').value;
-    let userReview = document.querySelector('#user-review').value;
-
-    // Inject the new review to the selected place
-    let newReview = {
-      "review_user": userFullname,
-      "review_text": userReview,
-      "review_rate": userRating
-    }
-    this.setState(prevState => {
-      const newPlaces = [...prevState.places];
-      newPlaces[selectedPlace].reviews.push(newReview);
-      return {places: newPlaces};
-    })
-
-    // Close the popup modal
-    this.closeReviewModal();
-  }
-  openPlaceModal = () => {
-    let modal = document.querySelector('#add-place-modal');
-    modal.classList.add('open');
-  }
-  closePlaceModal = () => {
-    let modal = document.querySelector('#add-place-modal');
-    modal.classList.remove('open');
-  }
   addPlace(e) {
     let {places} = this.state;
 
@@ -210,6 +151,34 @@ class App extends Component {
     // Close the popup modal
     this.closePlaceModal();
   }
+
+  addReview(e) {
+    let {places, selectedPlace} = this.state;
+
+    // Stop redirect
+    e.preventDefault();
+
+    // Cache user inputs
+    let userFullname = document.querySelector('#user-fullname').value;
+    let userRating = document.querySelector('#user-rating').value;
+    let userReview = document.querySelector('#user-review').value;
+
+    // Inject the new review to the selected place
+    let newReview = {
+      "review_user": userFullname,
+      "review_text": userReview,
+      "review_rate": userRating
+    }
+    this.setState(prevState => {
+      const newPlaces = [...prevState.places];
+      newPlaces[selectedPlace].reviews.push(newReview);
+      return {places: newPlaces};
+    })
+
+    // Close the popup modal
+    this.closeReviewModal();
+  }
+
   handleSort = (sortOrder) => {
     let sortedPlaces = this.state.places;
 
@@ -228,7 +197,44 @@ class App extends Component {
     })
   }
 
-  
+  /**
+   * Modals
+   */
+  openModal = (placeIndex) => {
+    let modal = document.querySelector('#all-reviews-modal');
+    modal.classList.add('open');
+    
+    // Update `Selected Place`
+    this.setState({
+      selectedPlace: placeIndex
+    })
+  }
+  closeModal = () => {
+    let modal = document.querySelector('#all-reviews-modal');
+    modal.classList.remove('open');
+  }
+  openReviewModal = (placeIndex) => {
+    let modal = document.querySelector('#add-review-modal');
+    modal.classList.add('open');
+
+    // Update `Selected Place`
+    this.setState({
+      selectedPlace: placeIndex
+    })
+  }
+  closeReviewModal = () => {
+    let modal = document.querySelector('#add-review-modal');
+    modal.classList.remove('open');
+  }
+  openPlaceModal = () => {
+    let modal = document.querySelector('#add-place-modal');
+    modal.classList.add('open');
+  }
+  closePlaceModal = () => {
+    let modal = document.querySelector('#add-place-modal');
+    modal.classList.remove('open');
+  }
+
   render() {
     return (
       <div className="App">
