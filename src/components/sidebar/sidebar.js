@@ -22,11 +22,19 @@ class Sidebar extends Component {
                         places.map((place, index) => {
                             return (
                                 <div className="place" key={index}>
-                                    <img 
-                                        src={'./images/' + place.image} 
-                                        alt={place.name} 
-                                        title={place.name}
-                                    />
+                                    {place.image == '' ? (
+                                        <img 
+                                            src='https://via.placeholder.com/300'
+                                            alt={place.name} 
+                                            title={place.name}
+                                        />
+                                    ) : (
+                                        <img 
+                                            src={'./images/' + place.image} 
+                                            alt={place.name} 
+                                            title={place.name}
+                                        />
+                                    )}
                                     <div className="details">
                                         <h2 className="name">{place.name}</h2>
                                         <div className="review">
