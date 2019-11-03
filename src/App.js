@@ -80,7 +80,7 @@ class App extends Component {
 
       // Get Places Details
       let placesInfo = [];
-      let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'place_id', 'icon', 'geometry'];
+      let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'place_id', 'geometry'];
 
       results.map(place => {
         service.getDetails({placeId: place.place_id, fields}, function(placeInfo, status) {
@@ -112,7 +112,7 @@ class App extends Component {
             anchor: new window.google.maps.Point(10, 10),
             scaledSize: new window.google.maps.Size(20, 20)
         },
-        position: placeLoc
+        position: place.geometry.location
     });
 
     marker.addListener('click', function() {
@@ -121,15 +121,12 @@ class App extends Component {
           reference: place.reference
       };
 
-      service.getDetails(request, function(details, status) {
-        infowindow.setContent([
-          details.name,
-          details.formatted_address,
-          details.website,
-          details.rating,
-          details.formatted_phone_number].join("<br />"));
-        infowindow.open(map, marker);        
-      });
+      infowindow.setContent([
+        place.name,
+        place.formatted_address,
+        place.rating,
+        place.formatted_phone_number].join("<br />"));
+      infowindow.open(map, marker);        
 
     })
   }
