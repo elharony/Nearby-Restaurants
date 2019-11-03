@@ -80,7 +80,7 @@ class App extends Component {
 
       // Get Places Details
       let placesInfo = [];
-      let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'place_id', 'geometry'];
+      let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'photo', 'place_id', 'geometry'];
 
       results.map(place => {
         service.getDetails({placeId: place.place_id, fields}, function(placeInfo, status) {
@@ -104,7 +104,6 @@ class App extends Component {
   }
 
   createMarker = (place) => {
-    var placeLoc = place.geometry.location;
     var marker = new window.google.maps.Marker({
         map: map,
         icon: {
@@ -119,13 +118,19 @@ class App extends Component {
 
       var request = {
           reference: place.reference
-      };
+      }
 
-      infowindow.setContent([
-        place.name,
-        place.formatted_address,
-        place.rating,
-        place.formatted_phone_number].join("<br />"));
+      let placePicture = place.photos ? place.photos[0].getUrl({maxWidth: 300, maxHeight: 300}) : 'https://via.placeholder.com/300';
+
+      let content = `
+        <h2>${place.name}</h2>
+        <img src=${placePicture}>
+        <ul>
+          <li>${place.formatted_address}</li>
+          <li>${place.formatted_phone_number}</li>
+        </ul>
+      `;
+      infowindow.setContent(content);
       infowindow.open(map, marker);        
 
     })
