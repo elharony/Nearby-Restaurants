@@ -35,24 +35,29 @@ class App extends Component {
 
   initMap = () => {
 
+    // Default Location
     var location = {
       lat: this.state.lat,
       lng: this.state.lng
     };
 
+    // Initialize Map
     map = new window.google.maps.Map(document.getElementById('map'), {
         center: location,
         zoom: 17
     });
 
+    // Current Location Marker
     var marker = new window.google.maps.Marker({
         position: location,
         map: map,
         title: "You're Here!"
     });
 
+    // Ask for user location
     this.getCurrentLocation();
 
+    // Request Info: It will be used for Google Places API `PlacesServices` to get certain places that match our criteria
     var request = {
         location: location,
         radius: 1000,
@@ -78,10 +83,10 @@ class App extends Component {
     let that = this;
     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 
-      // Get Places Details
       let placesInfo = [];
       let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'photo', 'place_id', 'geometry'];
-
+      
+      // Get Places Details
       results.map(place => {
         service.getDetails({placeId: place.place_id, fields}, function(placeInfo, status) {
           if (status === window.google.maps.places.PlacesServiceStatus.OK) {
@@ -167,12 +172,33 @@ class App extends Component {
 
         self.initMap();
       }, function() {
-        this.handleLocationError(true, infoWindow, map.getCenter());
+        handleLocationError(true, infoWindow, map.getCenter());
       })
     } else {
       // Browser doesn't support Geolocation
-      this.handleLocationError(false, infoWindow, map.getCenter());
+      handleLocationError(false, infoWindow, map.getCenter());
     }
+  }
+
+  handleSort = (e) => {
+    let sortedPlaces = this.state.placesDetails;
+    let sortOrder = e.target.value;
+
+    if(sortOrder === 'desc') { // Highest to lowest
+      sortedPlaces.sort(function (a, b) {
+        console.log('desc');
+        return b.rating - a.rating;
+      })
+    } else {
+      sortedPlaces.sort(function (a, b) {
+        console.log('asc');
+        return a.rating - b.rating;
+      })
+    }
+
+    this.setState({
+      placesDetails: sortedPlaces
+    })
   }
 
   render() {

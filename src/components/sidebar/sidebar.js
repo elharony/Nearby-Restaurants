@@ -2,25 +2,29 @@ import React, {Component} from 'react';
 import './sidebar.scss';
 
 class Sidebar extends Component {
-
     render() {
+
+        let {placesDetails, handleSort} = this.props;
+
         return (
             <div className="sidebar">
                 <div className="options">
                     <div className="sort">
-                        Sort by: <select id="sortby">
-                        <option value="desc">Reviews: Best to Poor</option>
-                        <option value="asc">Reviews: Poor to Best</option>
+                        Sort by: <select id="sortby" onChange={handleSort}>
+                            <option value="">Randomaly</option>
+                            <option value='desc'>Reviews: Best to Poor</option>
+                            <option value='asc'>Reviews: Poor to Best</option>
                         </select>
                     </div>
                     <button className="cta">Add New Place</button>
                 </div>
                 <div className="places">
                     {
-                        this.props.placesDetails.map((place, index) => (
+                        placesDetails.map((place, index) => (
                             <div className="place" key={index}>
                                 <div className="details">
                                     <h2 className="name">{place.name}</h2>
+                                    <p>Rating: {place.rating}</p>
                                     <div className="review">
                                         <ul className={'stars rate-' + Math.round(place.rating)}>
                                             <li><i className="fas fa-star"></i></li>
