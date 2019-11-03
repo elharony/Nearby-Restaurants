@@ -19,9 +19,9 @@ class App extends Component {
     places: [],
     placesDetails: [],
     selectedPlace: 0,
-    lat: 29.96175,
-    lng: 31.2492591,
-    zoom: 14
+    lat: 48.859514,
+    lng: 2.299105,
+    zoom: 17
   }
 
   componentDidMount() {
@@ -42,7 +42,7 @@ class App extends Component {
 
     map = new window.google.maps.Map(document.getElementById('map'), {
         center: location,
-        zoom: 12
+        zoom: 17
     });
 
     var marker = new window.google.maps.Marker({
@@ -50,6 +50,8 @@ class App extends Component {
         map: map,
         title: "You're Here!"
     });
+
+    this.getCurrentLocation();
 
     var request = {
         location: location,
@@ -67,6 +69,8 @@ class App extends Component {
     // }, function (place, status) {
     //   console.log('Place details:', place);
     // });
+
+
     
   }
 
@@ -74,19 +78,18 @@ class App extends Component {
     let that = this;
     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 
-      // Add Markers
-      // results.forEach(this.createMarker);
-
       // Get Places Details
       let placesInfo = [];
-      let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'place_id', 'geometry'];
+      let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'place_id', 'icon', 'geometry'];
 
       results.map(place => {
         service.getDetails({placeId: place.place_id, fields}, function(placeInfo, status) {
           if (status === window.google.maps.places.PlacesServiceStatus.OK) {
 
+            // Add New Place
             placesInfo.push(placeInfo);
 
+            // Update All Places & Add Markers
             that.setState({
               placesDetails: placesInfo
             }, that.addMarkers(placesInfo))
@@ -105,11 +108,11 @@ class App extends Component {
     var marker = new window.google.maps.Marker({
         map: map,
         icon: {
-            url: 'http://maps.gstatic.com/mapfiles/circle.png',
+            url: 'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png',
             anchor: new window.google.maps.Point(10, 10),
-            scaledSize: new window.google.maps.Size(10, 17)
+            scaledSize: new window.google.maps.Size(20, 20)
         },
-        position: place.geometry.location
+        position: placeLoc
     });
 
     marker.addListener('click', function() {
@@ -125,7 +128,6 @@ class App extends Component {
           details.website,
           details.rating,
           details.formatted_phone_number].join("<br />"));
-
         infowindow.open(map, marker);        
       });
 
@@ -133,6 +135,7 @@ class App extends Component {
   }
 
   getCurrentLocation = () => {
+    let self = this;
     let infoWindow = new window.google.maps.InfoWindow;
 
     let handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
@@ -154,6 +157,13 @@ class App extends Component {
         infoWindow.setContent('My Location!');
         infoWindow.open(map);
         map.setCenter(pos);
+
+        self.setState({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        })
+
+        self.initMap();
       }, function() {
         this.handleLocationError(true, infoWindow, map.getCenter());
       })
