@@ -61,7 +61,7 @@ export const places = [
       "lat": 29.9601,
       "lng": 31.2532501,
       "facebook": "https://www.facebook.com/makanakoffice/",
-      "rating": 3,
+      "rating": 2,
       "reviews": [
         {
           "review_user": "Makanak Last 1",

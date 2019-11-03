@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+
 import './App.scss';
-import places from './places.js';
+// import places from './places.js';
 
 /** Components */
 import Sidebar from './components/sidebar/sidebar';
@@ -8,12 +9,15 @@ import Map from './components/map/map';
 
 const API_KEY =`${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
-var map, infoWindow;
+var map;
+var infowindow;
+var service;
 
 class App extends Component {
 
   state = {
-    places: places.places,
+    places: [],
+    placesDetails: [],
     selectedPlace: 0,
     lat: 29.96175,
     lng: 31.2492591,
@@ -22,30 +26,114 @@ class App extends Component {
 
   componentDidMount() {
     this.renderMap();
-    this.handleSort('desc');
   }
-  
+
   renderMap = () => {
-    // loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`);
+    loadScript(`https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places&callback=initMap`);
     window.initMap = this.initMap;
   }
 
   initMap = () => {
-    let {lat, lng} = this.state;
+
+    var location = {
+      lat: this.state.lat,
+      lng: this.state.lng
+    };
+
     map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat, lng},
-      zoom: 14
+        center: location,
+        zoom: 12
     });
 
-    // Current Location
-    this.getCurrentLocation();
+    var marker = new window.google.maps.Marker({
+        position: location,
+        map: map,
+        title: "You're Here!"
+    });
 
-    // Place Markers
-    this.placeMarkers();
+    var request = {
+        location: location,
+        radius: 1000,
+        type: ['restaurant']
+    }
+    
+    infowindow = new window.google.maps.InfoWindow();
+    service = new window.google.maps.places.PlacesService(map);
+    service.nearbySearch(request, this.callback);
+
+    // var service = new window.google.maps.places.PlacesService(document.getElementById('map'));
+    // service.getDetails({
+    //   placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+    // }, function (place, status) {
+    //   console.log('Place details:', place);
+    // });
+    
+  }
+
+  callback = (results, status) => {
+    let that = this;
+    if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+
+      // Add Markers
+      // results.forEach(this.createMarker);
+
+      // Get Places Details
+      let placesInfo = [];
+      let fields = ['name', 'formatted_address', 'formatted_phone_number', 'rating', 'user_ratings_total', 'reviews', 'place_id', 'geometry'];
+
+      results.map(place => {
+        service.getDetails({placeId: place.place_id, fields}, function(placeInfo, status) {
+          if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+
+            placesInfo.push(placeInfo);
+
+            that.setState({
+              placesDetails: placesInfo
+            }, that.addMarkers(placesInfo))
+          }
+        })
+      })
+    }
+  }
+
+  addMarkers = (placesInfo) => {
+    placesInfo.forEach(this.createMarker);
+  }
+
+  createMarker = (place) => {
+    var placeLoc = place.geometry.location;
+    var marker = new window.google.maps.Marker({
+        map: map,
+        icon: {
+            url: 'http://maps.gstatic.com/mapfiles/circle.png',
+            anchor: new window.google.maps.Point(10, 10),
+            scaledSize: new window.google.maps.Size(10, 17)
+        },
+        position: place.geometry.location
+    });
+
+    marker.addListener('click', function() {
+
+      var request = {
+          reference: place.reference
+      };
+
+      service.getDetails(request, function(details, status) {
+        infowindow.setContent([
+          details.name,
+          details.formatted_address,
+          details.website,
+          details.rating,
+          details.formatted_phone_number].join("<br />"));
+
+        infowindow.open(map, marker);        
+      });
+
+    })
   }
 
   getCurrentLocation = () => {
-    infoWindow = new window.google.maps.InfoWindow;
+    let infoWindow = new window.google.maps.InfoWindow;
 
     let handleLocationError = (browserHasGeolocation, infoWindow, pos) => {
       infoWindow.setPosition(pos);
@@ -75,272 +163,17 @@ class App extends Component {
     }
   }
 
-  placeMarkers = () => {
-
-    let {places} = this.state;
-
-    // Add `infowWindow`
-    let infowindow = new window.google.maps.InfoWindow({
-      content: ''
-    })
-
-    // Place Markers
-    places.map(place => {
-
-      // Add Marker
-      var marker = new window.google.maps.Marker({
-        position: {lat: place.lat, lng: place.lng},
-        map: map,
-        animation: window.google.maps.Animation.DROP,
-        title: place.name
-      });
-
-      // `infowWindow` content
-      let content = `
-        <div class='infowindow'>
-        <img src='./images/${place.image}'/>
-          <div class='details'>
-            <h2>${place.name}</h2>
-            <p class='location'><i class="fas fa-map-marker-alt"></i> ${place.address}</p>
-          </div>
-        </div>
-      `;
-
-      // Show `infoWindow` on Marker Click
-      marker.addListener('click', function() {
-        infowindow.close();
-        infowindow.setContent(content);
-        infowindow.open(map, marker);
-      });
-
-    })
-  }
-
-  addPlace(e) {
-    let {places} = this.state;
-
-    // Stop redirect
-    e.preventDefault();
-
-    // Cache user inputs
-    let placeTitle = document.querySelector('#place-title').value;
-    let placeAddress = document.querySelector('#place-address').value;
-    let placeLat = document.querySelector('#place-lat').value;
-    let placeLng = document.querySelector('#place-lng').value;
-    let placePhone = document.querySelector('#place-phone').value;
-    let placeRate = document.querySelector('#place-rate').value;
-
-    // Inject the new review to the selected place
-    let newPlace = {
-      "name": placeTitle,
-      "image": '',
-      "address": placeAddress,
-      "phone": placePhone,
-      "lat": placeLat,
-      "lng": placeLng,
-      "rating": placeRate,
-      "reviews": []
-    }
-    
-    this.setState(prevState => {
-      const newPlaces = [...prevState.places];
-      newPlaces.push(newPlace);
-      return {places: newPlaces};
-    })
-
-    // Close the popup modal
-    this.closePlaceModal();
-  }
-
-  addReview(e) {
-    let {places, selectedPlace} = this.state;
-
-    // Stop redirect
-    e.preventDefault();
-
-    // Cache user inputs
-    let userFullname = document.querySelector('#user-fullname').value;
-    let userRating = document.querySelector('#user-rating').value;
-    let userReview = document.querySelector('#user-review').value;
-
-    // Inject the new review to the selected place
-    let newReview = {
-      "review_user": userFullname,
-      "review_text": userReview,
-      "review_rate": userRating
-    }
-    this.setState(prevState => {
-      const newPlaces = [...prevState.places];
-      newPlaces[selectedPlace].reviews.push(newReview);
-      return {places: newPlaces};
-    })
-
-    // Close the popup modal
-    this.closeReviewModal();
-  }
-
-  handleSort = (sortOrder) => {
-    let sortedPlaces = this.state.places;
-
-    if(sortOrder === 'desc') { // Highest to lowest
-      sortedPlaces.sort(function (a, b) {
-        return b.rating - a.rating;
-      })
-    } else {
-      sortedPlaces.sort(function (a, b) {
-        return a.rating - b.rating;
-      })
-    }
-
-    this.setState({
-      places: sortedPlaces
-    })
-  }
-
-  /**
-   * Modals
-   */
-  openModal = (placeIndex) => {
-    let modal = document.querySelector('#all-reviews-modal');
-    modal.classList.add('open');
-    
-    // Update `Selected Place`
-    this.setState({
-      selectedPlace: placeIndex
-    })
-  }
-  closeModal = () => {
-    let modal = document.querySelector('#all-reviews-modal');
-    modal.classList.remove('open');
-  }
-  openReviewModal = (placeIndex) => {
-    let modal = document.querySelector('#add-review-modal');
-    modal.classList.add('open');
-
-    // Update `Selected Place`
-    this.setState({
-      selectedPlace: placeIndex
-    })
-  }
-  closeReviewModal = () => {
-    let modal = document.querySelector('#add-review-modal');
-    modal.classList.remove('open');
-  }
-  openPlaceModal = () => {
-    let modal = document.querySelector('#add-place-modal');
-    modal.classList.add('open');
-  }
-  closePlaceModal = () => {
-    let modal = document.querySelector('#add-place-modal');
-    modal.classList.remove('open');
-  }
-
   render() {
     return (
       <div className="App">
-        <Sidebar 
-          places={this.state.places} 
+        <Sidebar
+          placesDetails={this.state.placesDetails} 
           openModal={this.openModal}
           openReviewModal={this.openReviewModal}
           openPlaceModal={this.openPlaceModal}
           handleSort={this.handleSort}
         />
         <Map />
-        
-        <div className="modal" id="all-reviews-modal">
-          <div className="inner">
-            <span className="close" id="close-modal" onClick={this.closeModal}>X</span>
-            <div className="review-list">
-
-            {
-              this.state.places[this.state.selectedPlace].reviews.map((review, index) => (
-                <div className="review" key={index}>
-                  <div className="review-info">
-                    <h3>{review.review_user}</h3>
-                    <ul className={'stars rate-' + review.review_rate}>
-                      <li><i className="fas fa-star"></i></li>
-                      <li><i className="fas fa-star"></i></li>
-                      <li><i className="fas fa-star"></i></li>
-                      <li><i className="fas fa-star"></i></li>
-                      <li><i className="fas fa-star"></i></li>
-                    </ul>
-                    <p>{review.review_text}</p>
-                  </div>
-                </div>
-              ))
-            }
-              
-            </div>
-          </div>
-        </div>
-        <div className="modal" id="add-review-modal">
-          <div className="inner">
-            <span className="close" id="close-add-review-modal" onClick={this.closeReviewModal}>X</span>
-            <form id="add-review-form" onSubmit={(e) => this.addReview(e)}>
-              <div className="input-wrap">
-                <label htmlFor="user-fullname">Full Name:</label>
-                <input type="text" id="user-fullname" placeholder="John Doe" required/>
-              </div>
-              <div className="input-wrap">
-                <label htmlFor="user-rating">Rate:</label>
-                <select id="user-rating" required>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </div>
-              <div className="input-wrap">
-                <label htmlFor="user-review">Review:</label>
-                <textarea id="user-review" cols="30" rows="3" placeholder="Review..."></textarea>
-              </div>
-              <div className="input-wrap">
-                <button type="submit">Add Review</button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="modal" id="add-place-modal">
-          <div className="inner">
-            <span className="close" id="close-add-place-modal" onClick={this.closePlaceModal}>X</span>
-            <form id="add-place-form" onSubmit={(e) => this.addPlace(e)}>
-              <div className="input-wrap">
-                <label htmlFor="place-title">Place Title:</label>
-                <input type="text" id="place-title" placeholder="Makannak Co-Working Space" required/>
-              </div>
-              <div className="input-wrap">
-                <label htmlFor="place-address">Address:</label>
-                <input type="text" id="place-address" placeholder="Villa 90 - Near Al Horia Square, Maadi, Cairo, Egypt" required/>
-              </div>
-              <div className="input-wrap">
-                <label htmlFor="place-lat">Latitude:</label>
-                <input type="text" id="place-lat" placeholder="29.9612892" required/>
-              </div>
-              <div className="input-wrap">
-                <label htmlFor="place-lng">Longitude:</label>
-                <input type="text" id="place-lng" placeholder="31.2483158" required/>
-              </div>
-              <div className="input-wrap">
-                <label htmlFor="place-phone">Phone:</label>
-                <input type="tel" id="place-phone" placeholder="01112134515" required/>
-              </div>
-              <div className="input-wrap">
-                <label htmlFor="place-rate">Rating:</label>
-                <select id="place-rate" required>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </div>
-              <div className="input-wrap">
-                <button type="submit">Add New Place</button>
-              </div>
-            </form>
-          </div>
-        </div>
       </div>
     );
   }
