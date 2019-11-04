@@ -132,10 +132,11 @@ button {
     .inner {
         position: relative;
         padding: 20px;
-        width: 300px;
+        width: 500px;
         max-width: 60%;
         background: #eee;
         box-sizing: border-box;
+        z-index: 99;
 
         .close {
             position: absolute;
@@ -153,13 +154,46 @@ button {
         }
 
         .review-list {
-            height: 100%;
+            max-height: 80vh;
             overflow-y: scroll;
 
             .review {
+                display: flex;
+                flex-wrap: wrap;
                 padding: 10px;
                 margin-bottom: 10px;
                 background: #fff;
+                box-sizing: border-box;
+
+                .author, .text {
+                    width: 100%;
+                }
+
+                .author {
+                    display: flex;
+                    margin-bottom: 10px;
+
+                    .author-thumbnail {
+                        width: 50px;
+                    }
+
+                    .author-info {
+                        margin-left: 15px;
+                        list-style: none;
+
+                        li {
+                            margin-bottom: 3px;
+
+                            .stars {
+                                margin-right: 5px;
+                            }
+                        }
+
+                        li:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
             }
         }
     }

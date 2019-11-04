@@ -18,7 +18,6 @@ class App extends Component {
   state = {
     places: [],
     placesDetails: [],
-    selectedPlace: 0,
     lat: 48.859514,
     lng: 2.299105,
     zoom: 17
@@ -55,7 +54,7 @@ class App extends Component {
     });
 
     // Ask for user location
-    this.getCurrentLocation();
+    // this.getCurrentLocation();
 
     // Request Info: It will be used for Google Places API `PlacesServices` to get certain places that match our criteria
     var request = {
