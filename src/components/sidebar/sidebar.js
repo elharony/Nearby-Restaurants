@@ -41,21 +41,27 @@ class Sidebar extends Component {
     addReview = () => {
         
         // User Input
-        let reviewUser = document.querySelector('#review-user').value;
-        let reviewText = document.querySelector('#review-text').value;
-        let reviewRate = document.querySelector('#review-rate').value;
+        let reviewUser = document.querySelector('#review-user');
+        let reviewText = document.querySelector('#review-text');
+        let reviewRate = document.querySelector('#review-rate');
         let reviewDate = new Date().getTime();
 
         // Add Review
         let review = {
-            author_name: reviewUser,
+            author_name: reviewUser.value,
             author_url: '#',
             profile_photo_url: 'https://via.placeholder.com/50',
-            rating: reviewRate,
-            text: reviewText,
+            rating: reviewRate.value,
+            text: reviewText.value,
             time: reviewDate
         }
         this.props.placesDetails[this.state.selectedPlace].reviews.push(review);
+
+        // Hide Modal
+        this.hideAddReviewModal();
+
+        // Reset Fields
+        this.resetInputFields([reviewUser, reviewText, reviewRate]);
     }
 
     // Add Place
@@ -72,22 +78,35 @@ class Sidebar extends Component {
     addPlace = () => {
 
         // User Input
-        let placeName = document.querySelector('#place-name').value;
-        let placeAddress = document.querySelector('#place-address').value;
-        let placePhone = document.querySelector('#place-phone').value;
-        let placeRate = document.querySelector('#place-rate').value;
+        let placeName = document.querySelector('#place-name');
+        let placeAddress = document.querySelector('#place-address');
+        let placePhone = document.querySelector('#place-phone');
+        let placeRate = document.querySelector('#place-rate');
 
         // Add Place
         let place = {
-            name: placeName,
-            formatted_address: placeAddress,
-            formatted_phone_number: placePhone,
-            rating: placeRate,
+            name: placeName.value,
+            formatted_address: placeAddress.value,
+            formatted_phone_number: placePhone.value,
+            rating: placeRate.value,
             user_ratings_total: 0,
             reviews: []
         }
 
         this.props.addPlace(place);
+
+        // Hide Modal
+        this.hideAddPlaceModal();
+
+        // Reset Fields
+        this.resetInputFields([placeName, placeAddress, placePhone, placeRate]);
+    }
+
+    // Reset Input Fields
+    resetInputFields = (inputs) => {
+        inputs.map(input => {
+            input.value = '';
+        })
     }
 
     render() {
