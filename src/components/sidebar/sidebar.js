@@ -56,6 +56,7 @@ class Sidebar extends Component {
             time: reviewDate
         }
         this.props.placesDetails[this.state.selectedPlace].reviews.push(review);
+        this.props.placesDetails[this.state.selectedPlace].user_ratings_total += 1;
 
         // Hide Modal
         this.hideAddReviewModal();
