@@ -200,6 +200,15 @@ class App extends Component {
     })
   }
 
+  addPlace = (newPlace) => {
+    let currentPlaces = this.state.placesDetails;
+    currentPlaces.push(newPlace);
+
+    this.setState({
+      placesDetails: currentPlaces
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -209,6 +218,7 @@ class App extends Component {
           openReviewModal={this.openReviewModal}
           openPlaceModal={this.openPlaceModal}
           handleSort={this.handleSort}
+          addPlace={this.addPlace}
         />
         <Map />
       </div>

@@ -196,14 +196,7 @@ button {
                 }
             }
         }
-    }
-}
-.modal.open {
-    display: flex;
-}
 
-.modal.add-review {
-    .inner {
         form {
             display: flex;
             flex-wrap: wrap;
@@ -231,4 +224,7 @@ button {
             }
         }
     }
+}
+.modal.open {
+    display: flex;
 }

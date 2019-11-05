@@ -8,6 +8,7 @@ class Sidebar extends Component {
         selectedPlace: 0
     }
 
+    // Show All Reviews
     updateSelectedPlace = (modal, index) => {
 
         if(modal === 'all-reviews') {
@@ -26,20 +27,18 @@ class Sidebar extends Component {
         allReviewsModal.classList.toggle('open');
     }
 
+    // Add Review
     showAddReviewModal = () => {
-        let addReviewsModal = document.querySelector('#add-review');
-        addReviewsModal.classList.add('open');
+        let addReviewModal = document.querySelector('#add-review');
+        addReviewModal.classList.add('open');
     }
 
     hideAddReviewModal = () => {
-        let addReviewsModal = document.querySelector('#add-review');
-        addReviewsModal.classList.remove('open');
+        let addReviewModal = document.querySelector('#add-review');
+        addReviewModal.classList.remove('open');
     }
 
-    addReview = (e) => {
-
-        // // Stop Form Submission
-        // e.preventDefault();
+    addReview = () => {
         
         // User Input
         let reviewUser = document.querySelector('#review-user').value;
@@ -59,6 +58,38 @@ class Sidebar extends Component {
         this.props.placesDetails[this.state.selectedPlace].reviews.push(review);
     }
 
+    // Add Place
+    showAddPlaceModal = () => {
+        let addPlaceModal = document.querySelector('#add-place');
+        addPlaceModal.classList.add('open');
+    }
+
+    hideAddPlaceModal = () => {
+        let addPlaceModal = document.querySelector('#add-place');
+        addPlaceModal.classList.remove('open');
+    }
+
+    addPlace = () => {
+
+        // User Input
+        let placeName = document.querySelector('#place-name').value;
+        let placeAddress = document.querySelector('#place-address').value;
+        let placePhone = document.querySelector('#place-phone').value;
+        let placeRate = document.querySelector('#place-rate').value;
+
+        // Add Place
+        let place = {
+            name: placeName,
+            formatted_address: placeAddress,
+            formatted_phone_number: placePhone,
+            rating: placeRate,
+            user_ratings_total: 0,
+            reviews: []
+        }
+
+        this.props.addPlace(place);
+    }
+
     render() {
 
         let {placesDetails, handleSort} = this.props;
@@ -73,7 +104,7 @@ class Sidebar extends Component {
                             <option value='asc'>Reviews: Poor to Best</option>
                         </select>
                     </div>
-                    <button className="cta">Add New Place</button>
+                    <button className="cta" onClick={this.showAddPlaceModal}>Add New Place</button>
                 </div>
                 <div className="places">
                     {
@@ -165,7 +196,37 @@ class Sidebar extends Component {
                         </form>
                     </div>
                 </div>
-                                
+
+                <div className="modal add-place" id="add-place">
+                    <div className="inner">
+                        <div className="close" onClick={this.hideAddPlaceModal}>X</div>
+                        <form action="" onSubmit={e => e.preventDefault()}>
+                            <div className="form-group">
+                                <label htmlFor="place-name">Place Name</label>
+                                <input type="text" id="place-name" placeholder="Ex. The Osmanly Restaurant" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="place-address">Address</label>
+                                <input type="text" id="place-address" placeholder="Ex. Kempinski Nile Hotel, Corniche El Nil, 12 Ahmed Raghab Street" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="place-phone">Phone</label>
+                                <input type="text" id="place-phone" placeholder="Ex. 02 27980000" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="place-rate">Rating</label>
+                                <select id="place-rate" required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <button onClick={this.addPlace}>Add Place</button>
+                        </form>
+                    </div>
+                </div>         
             </div>
         )
     }
