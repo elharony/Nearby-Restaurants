@@ -44,12 +44,12 @@ class Sidebar extends Component {
         let reviewUser = document.querySelector('#review-user');
         let reviewText = document.querySelector('#review-text');
         let reviewRate = document.querySelector('#review-rate');
-        let reviewDate = new Date().getTime();
+        let reviewDate = Math.floor(Date.now() / 1000);
 
         // Add Review
         let review = {
             author_name: reviewUser.value,
-            author_url: '#',
+            author_url: '',
             profile_photo_url: 'https://via.placeholder.com/50',
             rating: reviewRate.value,
             text: reviewText.value,
@@ -108,6 +108,11 @@ class Sidebar extends Component {
         inputs.map(input => {
             input.value = '';
         })
+    }
+
+    // Convert UNIX Timestamp
+    convertTime = (time) => {
+        return new Date(time * 1000).toISOString().slice(0, 19).replace('T', ' ');
     }
 
     render() {
@@ -170,7 +175,14 @@ class Sidebar extends Component {
                                             className="author-thumbnail"
                                         />
                                         <ul className="author-info">
-                                            <li><a href={review.author_url} target="_blank">{review.author_name}</a></li>
+                                            <li>
+                                                {review.author_url ? (
+                                                    <a href={review.author_url} target="_blank">{review.author_name}</a>
+                                                )
+                                                : (
+                                                    <span>{review.author_name}</span>
+                                                )}
+                                            </li>
                                             <li>
                                                 <ul className={'stars rate-' + Math.round(review.rating)}>
                                                     <li><i className="fas fa-star"></i></li>
@@ -179,7 +191,7 @@ class Sidebar extends Component {
                                                     <li><i className="fas fa-star"></i></li>
                                                     <li><i className="fas fa-star"></i></li>
                                                 </ul>
-                                                <time>{review.relative_time_description}</time>
+                                                <time>{this.convertTime(review.time)}</time>
                                             </li>
                                         </ul>
                                     </div>
