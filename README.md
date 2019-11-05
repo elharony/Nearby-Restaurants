@@ -1,68 +1,35 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Nearby Restaurants
+A React-Based Web Application to find nearby Restaurants using Google Places API
 
-## Available Scripts
+## Features
+- Display X places by default using a static location (Near `Eiffel Tower`)
+- Ask for the User Location using [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
+- Center the map to the user's location & Update the places according to the user location
+- Each place has an `Image`, `Address`, `Phone`, `Total Rating`, `Reviews`
+- Sort Places by Reviews (`Highest`, `Lowest`, `Randomaly`)
+- Show All Reviews for the selected place
+- Add New Review for the selected place
+- Add New Place; It will be added to the Places List & New Marker on the Map
 
-In the project directory, you can run:
+## Getting Started
+- `git clone https://github.com/elharony/Nearby-Restaurants.git`
+- `cd Nearby-Restaurants`
+- `npm install`
+- `npm start` or `yarn start`
 
-### `npm start`
+The app will work on your localhost! 🚀
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## API Usage
+This project relies on Google Console API, it's paid and I couldn't offer the API KEY in the project directly. That's why you have to create your own API KEY, and use it within the project to run it. Please follow the instructions below to add your own API KEY:
+- In the root directory, create a new environment file, called `.env`
+- Copy/Paste the following line:
+```
+REACT_APP_GOOGLE_MAPS_API_KEY = "PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE"
+```
+Make sure to replace `PASTE_YOUR_GOOGLE_MAPS_API_KEY_HERE` with your Google Maps API Key!
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Inside The App
+![Nearby-Restaurants](https://user-images.githubusercontent.com/16986422/68228220-c21d0000-fffd-11e9-8b43-3c79e2c89784.jpg)
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Contributing
+This is my 7th Project in The [Front-End Developer Diploma at OpenClassrooms](https://openclassrooms.com/en/paths/61-front-end-developer), and there's no need to contribute to this project. But if you're interested, you can `Fork` it, and build something cool upon it!
