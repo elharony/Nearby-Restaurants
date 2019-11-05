@@ -8,15 +8,55 @@ class Sidebar extends Component {
         selectedPlace: 0
     }
 
-    selectedPlace = (index) => {
-        this.setState({
-            selectedPlace: index
-        }, this.toggleAllReviews)
+    updateSelectedPlace = (modal, index) => {
+
+        if(modal === 'all-reviews') {
+            this.setState({
+                selectedPlace: index
+            }, this.toggleModal)
+        } else if(modal === 'add-review') {
+            this.setState({
+                selectedPlace: index
+            }, this.showAddReviewModal)
+        }
     }
 
-    toggleAllReviews = () => {
+    toggleModal = () => {
         let allReviewsModal = document.querySelector('#all-reviews');
         allReviewsModal.classList.toggle('open');
+    }
+
+    showAddReviewModal = () => {
+        let addReviewsModal = document.querySelector('#add-review');
+        addReviewsModal.classList.add('open');
+    }
+
+    hideAddReviewModal = () => {
+        let addReviewsModal = document.querySelector('#add-review');
+        addReviewsModal.classList.remove('open');
+    }
+
+    addReview = (e) => {
+
+        // // Stop Form Submission
+        // e.preventDefault();
+        
+        // User Input
+        let reviewUser = document.querySelector('#review-user').value;
+        let reviewText = document.querySelector('#review-text').value;
+        let reviewRate = document.querySelector('#review-rate').value;
+        let reviewDate = new Date().getTime();
+
+        // Add Review
+        let review = {
+            author_name: reviewUser,
+            author_url: '#',
+            profile_photo_url: 'https://via.placeholder.com/50',
+            rating: reviewRate,
+            text: reviewText,
+            time: reviewDate
+        }
+        this.props.placesDetails[this.state.selectedPlace].reviews.push(review);
     }
 
     render() {
@@ -41,7 +81,6 @@ class Sidebar extends Component {
                             <div className="place" key={index}>
                                 <div className="details">
                                     <h2 className="name">{place.name}</h2>
-                                    <p>Rating: {place.rating}</p>
                                     <div className="review">
                                         <ul className={'stars rate-' + Math.round(place.rating)}>
                                             <li><i className="fas fa-star"></i></li>
@@ -50,7 +89,8 @@ class Sidebar extends Component {
                                             <li><i className="fas fa-star"></i></li>
                                             <li><i className="fas fa-star"></i></li>
                                         </ul>
-                                        <span className="all-reviews">({place.user_ratings_total})</span> <span onClick={() => this.selectedPlace(index)}>Show All</span>
+                                        <span className="all-reviews" onClick={() => this.updateSelectedPlace('all-reviews', index)}>({place.user_ratings_total})</span> 
+                                        <span className="add-review" onClick={() => this.updateSelectedPlace('add-review', index)}>Add Review</span>
                                         {/* <span className="add-review" onClick={(e) => openReviewModal(index)}>Add Review</span> */}
                                     </div>
                                     <ul className="info">
@@ -66,7 +106,7 @@ class Sidebar extends Component {
 
                 <div className="modal reviews" id="all-reviews">
                     <div className="inner">
-                        <div className="close" onClick={this.toggleAllReviews}>X</div>
+                        <div className="close" onClick={this.toggleModal}>X</div>
                         <div className="review-list">
                             {placesDetails[0] ? placesDetails[this.state.selectedPlace].reviews.map(review => (
                                 <div className="review">
@@ -97,6 +137,34 @@ class Sidebar extends Component {
                         </div>
                     </div>
                 </div>
+            
+                <div className="modal add-review" id="add-review">
+                    <div className="inner">
+                        <div className="close" onClick={this.hideAddReviewModal}>X</div>
+                        <form action="" onSubmit={e => e.preventDefault()}>
+                            <div className="form-group">
+                                <label htmlFor="review-user">Full Name</label>
+                                <input type="text" id="review-user" placeholder="Ex. John Doe" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="review-rate">Rating</label>
+                                <select id="review-rate" required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="review-text">Review</label>
+                                <textarea id="review-text" cols="30" rows="10" placeholder="Write your review..." required></textarea>
+                            </div>
+                            <button onClick={this.addReview}>Add Review</button>
+                        </form>
+                    </div>
+                </div>
+                                
             </div>
         )
     }

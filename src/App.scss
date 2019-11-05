@@ -201,3 +201,34 @@ button {
 .modal.open {
     display: flex;
 }
+
+.modal.add-review {
+    .inner {
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            
+            .form-group {
+                width: 100%;
+                margin-bottom: 10px;
+
+                label {
+                    display: block;
+                    margin-bottom: 5px;
+                    font-weight: 500;
+                }
+
+                input, textarea, select {
+                    width: 100%;
+                    padding: 10px;
+                }
+            }
+
+            button {
+                padding: 10px 20px;
+                background: #4611a7;
+                color: #fff;
+            }
+        }
+    }
+}
