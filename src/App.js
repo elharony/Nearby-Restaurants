@@ -483,6 +483,7 @@ class App extends Component {
         }
       });
       marker.setMap(map);
+      map.setCenter(latLng);
 
       // InfoWindow
       marker.addListener('click', function() {
