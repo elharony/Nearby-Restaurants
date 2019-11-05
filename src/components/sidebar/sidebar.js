@@ -82,7 +82,11 @@ class Sidebar extends Component {
         let placeName = document.querySelector('#place-name');
         let placeAddress = document.querySelector('#place-address');
         let placePhone = document.querySelector('#place-phone');
+        let placeLat = document.querySelector('#place-latitude');
+        let placeLng = document.querySelector('#place-longitude');
         let placeRate = document.querySelector('#place-rate');
+        console.log(`Place Lat: `, placeLat.value);
+        console.log(`Place Lng: `, placeLng.value);
 
         // Add Place
         let place = {
@@ -91,7 +95,9 @@ class Sidebar extends Component {
             formatted_phone_number: placePhone.value,
             rating: placeRate.value,
             user_ratings_total: 0,
-            reviews: []
+            reviews: [],
+            lat: Number(placeLat.value),
+            lng: Number(placeLng.value)
         }
 
         this.props.addPlace(place);
@@ -100,7 +106,7 @@ class Sidebar extends Component {
         this.hideAddPlaceModal();
 
         // Reset Fields
-        this.resetInputFields([placeName, placeAddress, placePhone, placeRate]);
+        this.resetInputFields([placeName, placeAddress, placePhone, placeRate, placeLat, placeLng]);
     }
 
     // Reset Input Fields
@@ -240,6 +246,14 @@ class Sidebar extends Component {
                             <div className="form-group">
                                 <label htmlFor="place-address">Address</label>
                                 <input type="text" id="place-address" placeholder="Ex. Kempinski Nile Hotel, Corniche El Nil, 12 Ahmed Raghab Street" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="place-latitude">Latitude</label>
+                                <input type="text" id="place-latitude" placeholder="Ex. 48.850073" required/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="place-longitude">Longitude</label>
+                                <input type="text" id="place-longitude" placeholder="Ex. 2.299631" required/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="place-phone">Phone</label>

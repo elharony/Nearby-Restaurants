@@ -301,7 +301,7 @@ class App extends Component {
     // Initialize Map
     map = new window.google.maps.Map(document.getElementById('map'), {
         center: location,
-        zoom: 17,
+        zoom: 15,
         styles: mapStyle
     });
 
@@ -313,7 +313,7 @@ class App extends Component {
     });
 
     // Ask for user location
-    // this.getCurrentLocation();
+    this.getCurrentLocation();
 
     // Request Info: It will be used for Google Places API `PlacesServices` to get certain places that match our criteria
     var request = {
@@ -369,6 +369,7 @@ class App extends Component {
   createMarker = (place) => {
     var marker = new window.google.maps.Marker({
         map: map,
+        title: place.name,
         icon: {
             url: 'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png',
             anchor: new window.google.maps.Point(10, 10),
@@ -419,7 +420,7 @@ class App extends Component {
         };
 
         infoWindow.setPosition(pos);
-        infoWindow.setContent('My Location!');
+        infoWindow.setContent("You're here!");
         infoWindow.open(map);
         map.setCenter(pos);
 
@@ -463,10 +464,63 @@ class App extends Component {
     let currentPlaces = this.state.placesDetails;
     currentPlaces.push(newPlace);
 
+    let placeMarker = () => {
+      // Position
+      let latLng = {
+        lat: newPlace.lat,
+        lng: newPlace.lng
+      }
+
+      // Add Marker
+      var marker = new window.google.maps.Marker({
+        position: latLng,
+        map: map,
+        title: newPlace.name,
+        icon: {
+          url: 'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png',
+          anchor: new window.google.maps.Point(10, 10),
+          scaledSize: new window.google.maps.Size(20, 20)
+        }
+      });
+      marker.setMap(map);
+
+      // InfoWindow
+      marker.addListener('click', function() {
+        let placePicture = newPlace.photos ? newPlace.photos[0].getUrl({maxWidth: 300, maxHeight: 300}) : 'https://via.placeholder.com/300';
+
+        let content = `
+          <h2>${newPlace.name}</h2>
+          <img src=${placePicture}>
+          <ul>
+            <li>${newPlace.formatted_address}</li>
+            <li>${newPlace.formatted_phone_number}</li>
+          </ul>
+        `;
+        infowindow.setContent(content);
+        infowindow.open(map, marker);     
+      })
+    }
+
     this.setState({
       placesDetails: currentPlaces
-    })
+    }, placeMarker())
+
+    console.log(newPlace.lat, newPlace.lng)
   }
+
+  // placeMarker = (latLng) => {
+  //   var marker = new window.google.maps.Marker({
+  //       position: latLng,
+  //       map: map
+  //   });
+  //   map.panTo(latLng);
+
+  //   var marker = new google.maps.Marker({
+  //     position: myLatLng,
+  //     map: map,
+  //     title: 'Hello World!'
+  //   });
+  // }
 
   render() {
     return (
