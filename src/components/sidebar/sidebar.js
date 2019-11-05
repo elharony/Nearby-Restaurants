@@ -79,6 +79,7 @@ class Sidebar extends Component {
                     {
                         placesDetails.map((place, index) => (
                             <div className="place" key={index}>
+                                <img src={place.photos ? place.photos[0].getUrl({maxWidth: 300, maxHeight: 300}) : 'https://via.placeholder.com/300'} alt={place.name} />
                                 <div className="details">
                                     <h2 className="name">{place.name}</h2>
                                     <div className="review">
