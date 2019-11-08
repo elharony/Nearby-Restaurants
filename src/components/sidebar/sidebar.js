@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './sidebar.scss';
-import { places } from '../../places';
 
 class Sidebar extends Component {
 
@@ -130,9 +129,11 @@ class Sidebar extends Component {
                 <div className="options">
                     <div className="sort">
                         Sort by: <select id="sortby" onChange={handleSort}>
-                            <option value="">Randomaly</option>
-                            <option value='desc'>Reviews: Best to Poor</option>
-                            <option value='asc'>Reviews: Poor to Best</option>
+                            <option value="0">Any Rating</option>
+                            <option value='1'>+1 ⭐✰✰✰✰</option>
+                            <option value='2'>+2 ⭐⭐✰✰✰</option>
+                            <option value='3'>+3 ⭐⭐⭐✰✰</option>
+                            <option value='4'>+4 ⭐⭐⭐⭐✰</option>
                         </select>
                     </div>
                     <button className="cta" onClick={this.showAddPlaceModal}>Add New Place</button>
@@ -152,6 +153,7 @@ class Sidebar extends Component {
                                             <li><i className="fas fa-star"></i></li>
                                             <li><i className="fas fa-star"></i></li>
                                         </ul>
+                                        <strong>{Math.round(place.rating)}</strong>
                                         <span className="all-reviews" onClick={() => this.updateSelectedPlace('all-reviews', index)}>({place.user_ratings_total})</span> 
                                         <span className="add-review" onClick={() => this.updateSelectedPlace('add-review', index)}>Add Review</span>
                                         {/* <span className="add-review" onClick={(e) => openReviewModal(index)}>Add Review</span> */}

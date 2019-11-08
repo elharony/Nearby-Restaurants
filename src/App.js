@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 
 import './App.scss';
-// import places from './places.js';
 
-/** Components */
 import Sidebar from './components/sidebar/sidebar';
 import Map from './components/map/map';
 
@@ -274,8 +272,8 @@ var service;
 class App extends Component {
 
   state = {
-    places: [],
     placesDetails: [],
+    sortedPlacesDetails: [],
     lat: 48.859514,
     lng: 2.299105,
     zoom: 17
@@ -318,23 +316,13 @@ class App extends Component {
     // Request Info: It will be used for Google Places API `PlacesServices` to get certain places that match our criteria
     var request = {
         location: location,
-        radius: 1000,
+        radius: 500,
         type: ['restaurant']
     }
     
     infowindow = new window.google.maps.InfoWindow();
     service = new window.google.maps.places.PlacesService(map);
     service.nearbySearch(request, this.callback);
-
-    // var service = new window.google.maps.places.PlacesService(document.getElementById('map'));
-    // service.getDetails({
-    //   placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4'
-    // }, function (place, status) {
-    //   console.log('Place details:', place);
-    // });
-
-
-    
   }
 
   callback = (results, status) => {
@@ -354,7 +342,8 @@ class App extends Component {
 
             // Update All Places & Add Markers
             that.setState({
-              placesDetails: placesInfo
+              placesDetails: placesInfo,
+              sortedPlacesDetails: placesInfo
             }, that.addMarkers(placesInfo))
           }
         })
@@ -440,24 +429,23 @@ class App extends Component {
   }
 
   handleSort = (e) => {
-    let sortedPlaces = this.state.placesDetails;
-    let sortOrder = e.target.value;
+    let places = this.state.placesDetails;
+    let sortedPlaces = [];
+    let minRating = e.target.value;
 
-    if(sortOrder === 'desc') { // Highest to lowest
-      sortedPlaces.sort(function (a, b) {
-        console.log('desc');
-        return b.rating - a.rating;
-      })
-    } else {
-      sortedPlaces.sort(function (a, b) {
-        console.log('asc');
-        return a.rating - b.rating;
-      })
-    }
+    places.map(place => {
+      console.log(place.rating);
+      if(place.rating >= minRating) {
+        sortedPlaces.push(place);
+      }
+    })
 
     this.setState({
-      placesDetails: sortedPlaces
-    })
+      sortedPlacesDetails: sortedPlaces
+    });
+
+    // Reset sortedPlaces for future sorting
+    sortedPlaces = [];
   }
 
   addPlace = (newPlace) => {
@@ -509,28 +497,11 @@ class App extends Component {
     console.log(newPlace.lat, newPlace.lng)
   }
 
-  // placeMarker = (latLng) => {
-  //   var marker = new window.google.maps.Marker({
-  //       position: latLng,
-  //       map: map
-  //   });
-  //   map.panTo(latLng);
-
-  //   var marker = new google.maps.Marker({
-  //     position: myLatLng,
-  //     map: map,
-  //     title: 'Hello World!'
-  //   });
-  // }
-
   render() {
     return (
       <div className="App">
         <Sidebar
-          placesDetails={this.state.placesDetails} 
-          openModal={this.openModal}
-          openReviewModal={this.openReviewModal}
-          openPlaceModal={this.openPlaceModal}
+          placesDetails={this.state.sortedPlacesDetails} 
           handleSort={this.handleSort}
           addPlace={this.addPlace}
         />
@@ -550,13 +521,3 @@ function loadScript(url) {
 }
 
 export default App;
-
-/**
- * Features
- * --------
- * - Filter by Rating
- * - Add new Co-Working Space 
- * 
- * First mentor to be chosen Software Architect Path at OC, it's a Master Degree!
- * I was raised in Communist Europe, and it wasn't flowers. 
- */

@@ -10,6 +10,7 @@
         box-sizing: border-box;
 
         .sort {
+            height: 25px;
             width: 250px;
         }
 
@@ -66,6 +67,10 @@
                     margin-bottom: 1rem;
                     display: flex;
                     align-items: baseline;
+
+                    .stars {
+                        margin-right: 5px;
+                    }
 
                     .all-reviews, .add-review {
                         font-size: 0.9rem;
